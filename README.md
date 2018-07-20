@@ -2,7 +2,7 @@
 
 This is the working area for the IETF [ROLL Working Group](https://datatracker.ietf.org/wg/roll/documents/) Internet-Draft, "Efficient Route Invalidation".
 
-* [Editor's Copy](https://roll-wg.github.io/efficient-route-invalidation/#go.draft-ietf-roll-efficient-npdao.html)
+* [Editor's Copy](draft-ietf-roll-efficient-npdao.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-roll-efficient-npdao)
 * [Compare Editor's Copy to Working Group Draft](https://roll-wg.github.io/efficient-route-invalidation/#go.draft-ietf-roll-efficient-npdao.diff)
 
