@@ -3,7 +3,7 @@
      which is available here: http://xml.resource.org. -->
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
 <!-- One method to get references from the online citation libraries.
-     There has to be one entity for each item to be referenced. 
+     There has to be one entity for each item to be referenced.
      An alternate method (rfc include) is described in the references. -->
 
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
@@ -11,7 +11,7 @@
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
-<!-- For a complete list and description of processing instructions (PIs), 
+<!-- For a complete list and description of processing instructions (PIs),
      please see http://xml.resource.org/authoring/README.html. -->
 <!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
      (Here they are set differently than their defaults in xml2rfc v1.32) -->
@@ -27,7 +27,7 @@
 <!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
 <?rfc sortrefs="yes" ?>
 <!-- sort the reference entries alphabetically -->
-<!-- control vertical white space 
+<!-- control vertical white space
      (using these PIs as follows is recommended by the RFC Editor) -->
 <?rfc compact="yes" ?>
 <!-- do not start each main section on a new page -->
@@ -37,17 +37,17 @@
 <rfc category="std" docName="draft-ietf-roll-efficient-npdao-latest" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
-     you can add the attributes updates="NNNN" and obsoletes="NNNN" 
+     you can add the attributes updates="NNNN" and obsoletes="NNNN"
      they will automatically be output with "(if approved)" -->
 
   <!-- ***** FRONT MATTER ***** -->
 
   <front>
-    <!-- The abbreviated title is used in the page header - it is only necessary if the 
+    <!-- The abbreviated title is used in the page header - it is only necessary if the
          full title is longer than 39 characters -->
 
     <title abbrev="Efficient Route Invalidation">Efficient Route Invalidation</title>
-    
+
     <author fullname="Rahul Arvind Jadhav" initials="R.A." role="editor" surname="Jadhav">
       <organization>Huawei</organization>
       <address>
@@ -105,11 +105,11 @@
 
     <date year="2018" />
 
-    <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
-         in the current day for you. If only the current year is specified, xml2rfc will fill 
-     in the current day and month for you. If the year is not the current one, it is 
-     necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the 
-     purpose of calculating the expiry date).  With drafts it is normally sufficient to 
+    <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
+         in the current day for you. If only the current year is specified, xml2rfc will fill
+     in the current day and month for you. If the year is not the current one, it is
+     necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the
+     purpose of calculating the expiry date).  With drafts it is normally sufficient to
      specify just the year. -->
 
     <!-- Meta-data Declarations -->
@@ -119,7 +119,7 @@
     <workgroup>ROLL</workgroup>
 
     <!-- WG name at the upperleft corner of the doc,
-         IETF is fine for individual submissions.  
+         IETF is fine for individual submissions.
      If this element is not present, the default is "Network Working Group",
          which is used by the RFC Editor as a nod to the history of the IETF. -->
 
@@ -139,7 +139,7 @@
 
 <middle>
     <section title="Introduction">
-        <t> 
+        <t>
             RPL <xref target="RFC6550"/> specifies a proactive distance-vector
             based routing scheme. The specification has an optional messaging in
             the form of DAO messages using which the 6LBR can learn route towards
@@ -148,7 +148,7 @@
             all the way towards the 6LBR.
         </t>
 
-        <t> 
+        <t>
             RPL allows use of No-Path DAO (NPDAO) messaging to invalidate a routing
             path corresponding to the given target, thus releasing resources
             utilized on that path.  A No-Path DAO is a DAO message with route
@@ -162,7 +162,7 @@
             route invalidation messaging.
         </t>
 
-        <t> 
+        <t>
             6TiSCH architecture <xref target="I-D.ietf-6tisch-architecture"/>
             leverages RPL and specifies use of non-storing and storing MOP for its
             routing operation. Thus an improvement in route invalidation will help
@@ -198,15 +198,18 @@
         </section>
 
         <section anchor="current_npdao" title="Current No-Path DAO messaging">
-            <t>RPL introduced No-Path DAO messaging in the storing mode so that
-                the node switching its current parent can inform its parents and
-                ancestors to invalidate the existing route. Subsequently parents or
-                ancestors would release any resources (such as the routing entry)
-                it maintains on behalf of target node. The NPDAO message always
-                traverses the RPL tree in upward direction, originating at the
-                target node itself.</t>
+            <t>
+                RPL introduced No-Path DAO messaging in the storing mode so
+                that the node switching its current parent can inform its
+                parents and ancestors to invalidate the existing route.
+                Subsequently parents or ancestors would release any resources
+                (such as the routing entry) it maintains on behalf of target
+                node. The NPDAO message always traverses the RPL tree in upward
+                direction, originating at the target node itself.
+            </t>
 
-            <t>For the rest of this document consider the following topology:
+            <t>
+            For the rest of this document consider the following topology:
             </t>
 
             <t> <figure align="center" anchor="sample_top" title="Sample
@@ -239,7 +242,7 @@
                 for (D) for paths through (B)-(G) and (C)-(H). When (D) switches from
                 (B) to (C), [RFC6550] suggests sending No-Path DAO to (B) and
                 regular DAO to (C).</t>
-        </section>  
+        </section>
 
         <section title="Cases when No-Path DAO may be used">
             <t> There are following cases in which a node switches its parent
@@ -258,10 +261,10 @@
                 is that the node sends a No-Path DAO message via its current parent
                 to invalidate its current route and subsequently it tries to
                 establish a new routing path by sending a new DAO via its new
-                parent.</t>       
-        </section> 
+                parent.</t>
+        </section>
 
-        <section title="Why No-Path DAO is important?"> 
+        <section title="Why No-Path DAO is important?">
             <t>
                 Nodes in LLNs may be resource constrained. There is limited
                 memory available and routing entry records are the one of the
@@ -278,11 +281,11 @@
                 route invalidation, a 6LR may have to hold a lot of unwanted
                 route entries.
             </t>
-        </section> 
+        </section>
     </section>
 
     <section anchor="current_npdao_problems" title="Problems with current
-        No-Path DAO messaging"> 
+        No-Path DAO messaging">
         <section title="Lost NPDAO due to link break to the previous parent">
             <t>
                 When a node switches its parent, the NPDAO is to be sent via
@@ -325,7 +328,7 @@
 
         <section title="Route downtime caused by asynchronous operation of
             NPDAO and DAO">
-            <t> 
+            <t>
                 A switching node may generate both an NPDAO and DAO via two
                 different paths at almost the same time. There is a possibility
                 that an NPDAO generated may invalidate the previous route and the
@@ -347,19 +350,23 @@
         <section title="Req#1: Tolerant to link failures to the previous
             parents">
             <t>
-                When the switching node send the NPDAO message to the previous
+                When the switching node sends the NPDAO message to the previous
                 parent, it is normal that the link to the previous parent is prone
-                to failure.  Therefore, it is required that the NPDAO message MUST
-                be tolerant to the link failure during the switching.
+                to failure.  Therefore, it is required that the NPDAO message
+                MUST be tolerant to the link failure during the switching. The
+                link referred here represents the link between the node and its
+                previous parent (from whom the node is now disassociating).
             </t>
         </section>
 
         <section title="Req#2: Dependent nodes route invalidation on parent
             switching">
-            <t>While switching the parent node and sending NPDAO message, it
+            <t>
+                While switching the parent node and sending NPDAO message, it
                 is required that the routing entries to the dependent nodes of the
                 switching node will be updated accordingly on the previous parents
-                and other relevant upstream nodes.</t>
+                and other relevant upstream nodes.
+            </t>
         </section>
 
         <section title="Req#3: No impact on traffic while NPDAO operation in
@@ -460,10 +467,9 @@
                 mentioned in <xref target="current_npdao_problems"/>, the draft
                 adds new pro-active route invalidation message called as
                 "Destination Cleanup Object" (DCO) that originates at a common
-                ancestor node between the new and old path. The trigger for the
-                common ancestor node to generate this DCO is the change in the
-                next hop for the target on reception of an update message in
-                the form of regular DAO for the target.
+                ancestor node between the new and old path. The common ancestor
+                node generates a DCO in response to the change in the
+                next-hop on receiving a regular DAO for the target.
             </t>
 
             <t>
@@ -548,7 +554,7 @@
                 information held on behalf of the target node by 6LRs. The DCO
                 message always traverses downstream and cleans up route
                 information and other state information associated with the
-                given target. 
+                given target.
             </t>
 
             <t> <figure align="center" anchor="dco_obj"
@@ -574,11 +580,11 @@
             <t>
                 RPLInstanceID: 8-bit field indicating the topology instance
                 associated with the DODAG, as learned from the DIO.
-            </t> 
+            </t>
             <t>
                 K: The 'K' flag indicates that the recipient is expected to send
                 a DCO-ACK back.
-            </t> 
+            </t>
             <t>
                 D: The 'D' flag indicates that the DODAGID field is present.
                 This flag MUST be set when a local RPLInstanceID is used.
@@ -587,7 +593,7 @@
                 Flags: The 6 bits remaining unused in the Flags field are
                 reserved for flags.  The field MUST be initialized to zero by
                 the sender and MUST be ignored by the receiver.
-            </t> 
+            </t>
             <t>
                 Reserved: 8-bit unused field.  The field MUST be initialized to
                 zero by the sender and MUST be ignored by the receiver.
@@ -607,7 +613,7 @@
                 to zero on transmission and MUST be ignored on reception.
             </t>
 
-            <section title="Secure DCO"> 
+            <section title="Secure DCO">
                 <t>
                     A Secure DCO message follows the format in <xref
                         target="RFC6550"/> figure 7, where the base message
@@ -616,8 +622,8 @@
                 </t>
             </section>
 
-            <section title="DCO Options"> 
-                <t> 
+            <section title="DCO Options">
+                <t>
                     The DCO message MAY carry valid options.  This
                     specification allows for the DCO message to carry the
                     following options:
@@ -633,7 +639,7 @@
                     indicate a loss of reachability to that Target.
                 </t>
             </section>
-            <section title="Path Sequence number in the DCO"> 
+            <section title="Path Sequence number in the DCO">
                 <t>
                     A DCO message may contain a Path Sequence in the transit
                     information option to identify the freshness of the DCO
@@ -671,7 +677,7 @@
                 <t>
                     D: The 'D' flag indicates that the DODAGID field is present.
                     This flag MUST be set when a local RPLInstanceID is used.
-                </t> 
+                </t>
                 <t>
                     Reserved: 7-bit unused field.  The field MUST be initialized to
                     zero by the sender and MUST be ignored by the receiver.
@@ -679,7 +685,7 @@
                 <t>
                     DCOSequence: Incremented at each unique DCO message from a node
                     and echoed in the DCO-ACK message.
-                </t> 
+                </t>
                 <t>
                     Status: Indicates the completion.  Status 0 is defined as
                     unqualified acceptance in this specification.  The remaining
@@ -698,7 +704,7 @@
                 </t>
             </section>
 
-            <section title="Secure DCO-ACK"> 
+            <section title="Secure DCO-ACK">
                 <t>
                     A Secure DCO-ACK message follows the format in <xref
                         target="RFC6550"/> figure 7, where the base message
@@ -733,16 +739,16 @@
                     node simply decides to gracefully terminate the RPL session
                     on graceful node shutdown. Moreover a deployment can have a
                     mix of nodes supporting the proposed DCO and the existing
-                    NPDAO mechanism. 
+                    NPDAO mechanism.
                 </t>
             </section>
         </section>
     </section>
 
     <section anchor="Acknowledgements" title="Acknowledgements">
-        <t> 
-            We would like to thank Cenk Gundogan and Simon Duquennoy
-            for their review and comments.
+        <t>
+            Many thanks to Cenk Gundogan, Simon Duquennoy, and Georgios
+            Papadopoulous for their review and comments.
         </t>
     </section>
 
@@ -838,7 +844,7 @@
                     updates the routing entry and forwards the reachability
                     information of target D upstream
                     DAO(tgt=D,pathseq=x+1,I_flag=x) (the I_flag carries no
-                    significance henceforth).</t> 
+                    significance henceforth).</t>
 
                 <t>Node G receives the DCO and invalidates routing entry of
                     target D and forwards the (un)reachability information
@@ -848,8 +854,7 @@
                     entry of target D and forwards the (un)reachability
                     information downstream to D.</t>
 
-                <t>D ignores the DCO since the target is
-                    itself.</t>
+                <t>D ignores the DCO since the target is itself.</t>
 
                 <t>The propagation of the DCO will stop at any node where the
                     node does not have an routing information associated with
