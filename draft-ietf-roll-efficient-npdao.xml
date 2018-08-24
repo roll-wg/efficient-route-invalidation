@@ -473,7 +473,7 @@
             </t>
 
             <t>
-                In the <xref target="sample_top"/>, when node D decides to
+                In <xref target="sample_top"/>, when node D decides to
                 switch the path from B to C, it sends a regular DAO to node C
                 with reachability information containing target as address of D
                 and a incremented path sequence number. Node C will update the
@@ -493,7 +493,7 @@
             </t>
 
         </section>
-        <section title="DAO message format changes">
+        <section title="Transit Information Option format change">
             <t>
                 Every RPL message is divided into base message fields and
                 additional Options. The base fields apply to the message as a
@@ -506,12 +506,12 @@
             </t>
 
             <t>
-                The draft proposes a change in DAO message to contain
-                "Invalidate previous route" (I) bit. This I-bit which is
-                carried in regular DAO message, signals the common ancestor
-                node to generate a DCO on behalf of the target node. The I-bit
-                is carried in the transit container option which augments the
-                reachability information for a given set of RPL Target(s).
+                The draft proposes a change in Transit Information option to
+                contain "Invalidate previous route" (I) bit. This I-bit signals
+                the common ancestor node to generate a DCO on behalf of the
+                target node. The I-bit is carried in the transit information
+                option which augments the reachability information for a given
+                set of RPL Target(s).
             </t>
             <t> <figure align="center" anchor="transit_info_with_i"
                     title="Updated Transit Information Option (New I flag
@@ -724,7 +724,7 @@
                     paths, and the previous route invalidation for those nodes
                     should work in the similar manner described for switching
                     node. The dependent node may set the I-bit in the transit
-                    information container as part of regular DAO so as to
+                    information option as part of regular DAO so as to
                     request invalidation of previous route from the common
                     ancestor node.
                 </t>
