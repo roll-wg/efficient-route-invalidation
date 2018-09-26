@@ -34,7 +34,7 @@
 <?rfc subcompact="yes" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-roll-efficient-npdao-latest" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-roll-efficient-npdao-07" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN"
@@ -96,7 +96,6 @@
         <postal>
           <street>W Chang'an Ave</street>
           <city>Beijing</city>
-          <code>560037</code>
           <country>China</country>
         </postal>
         <email>zhencao.ietf@gmail.com</email>
@@ -142,10 +141,11 @@
         <t>
             RPL <xref target="RFC6550"/> specifies a proactive distance-vector
             based routing scheme. RPL has an optional messaging in the form of
-            DAO messages using which the 6LBR can learn route towards the
-            nodes. In storing mode, DAO messages would result in routing
-            entries been created on all intermediate hops from the node's
-            parent all the way towards the 6LBR.
+            DAO (Destination Advertisement Object) messages using which the
+            6LBR can learn route towards the nodes. In storing mode, DAO
+            messages would result in routing entries been created on all
+            intermediate hops from the node's parent all the way towards the
+            6LBR.
         </t>
 
         <t>
@@ -162,16 +162,21 @@
             messaging.
         </t>
 
+        <t>
+            The document only caters to the RPL's storing mode of operation
+            (MOP). The non-storing MOP does not require use of NPDAO for route
+            invalidation since routing entries are not maintained on 6LRs.
+        </t>
+
+
         <section title="Requirements Language and Terminology">
             <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
                 NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
                 "OPTIONAL" in this document are to be interpreted as described
                 in <xref target="RFC2119">RFC 2119</xref>.</t>
 
-            <t>The document only caters to the RPL's storing mode of operation
-                (MOP). The non-storing MOP does not require use of NPDAO for
-                route invalidation since routing entries are not maintained on
-                6LRs.</t>
+            <t>DAO: Destination Advertisement Object</t>
+            <t>DIO: DODAG Information Object</t>
 
             <t>Common Ancestor node: 6LR node which is the first common node on
                 the old and new path for the child node.</t>
@@ -290,8 +295,8 @@
         NPDAO messaging">
         <section title="Lost NPDAO due to link break to the previous parent">
             <t>
-                When a node switches its parent, the NPDAO is to be sent via
-                its previous parent and a regular DAO via its new parent. In
+                When a node switches its parent, the NPDAO is to be sent to
+                its previous parent and a regular DAO to its new parent. In
                 cases where the node switches its parent because of transient
                 or permanent parent link/node failure then the NPDAO message is
                 bound to fail.
@@ -351,10 +356,11 @@
             <t>
                 When the switching node sends the NPDAO message to the previous
                 parent, it is normal that the link to the previous parent is
-                prone to failure.  Therefore, it is required that the NPDAO
-                message must be tolerant to the link failure. The link referred
-                here represents the link between the node and its previous
-                parent (from whom the node is now disassociating).
+                prone to failure.  Therefore, it is required that the route
+                invalidation does not depend on the previous link which is
+                prone to failure. The previous link referred here represents
+                the link between the node and its previous parent (from whom
+                the node is now disassociating).
             </t>
         </section>
 
@@ -590,7 +596,7 @@
             </t>
             <t>
                 Flags: The 6 bits remaining unused in the Flags field are
-                reserved for flags.  The field MUST be initialized to zero by
+                reserved for future use.  These bits MUST be initialized to zero by
                 the sender and MUST be ignored by the receiver.
             </t>
             <t>
@@ -731,14 +737,23 @@
             <section title="NPDAO and DCO in the same network">
                 <t>
                     Even with the changed semantics, the current NPDAO
-                    mechanism in <xref target="RFC6550"/> can still be
-                    used. There are certain scenarios where current NPDAO
-                    signalling may still be used, for example, when the
-                    route lifetime expiry of the target happens or when the
-                    node simply decides to gracefully terminate the RPL session
-                    on graceful node shutdown. Moreover a deployment can have a
-                    mix of nodes supporting the proposed DCO and the existing
-                    NPDAO mechanism.
+                    mechanism in <xref target="RFC6550"/> can still be used,
+                    for example, when the route lifetime expiry of the target
+                    happens or when the node simply decides to gracefully
+                    terminate the RPL session on graceful node shutdown.
+                    Moreover a deployment can have a mix of nodes
+                    supporting the proposed DCO and the existing NPDAO
+                    mechanism.
+                </t>
+            </section>
+            <section title="DCO with multiple preferred parents">
+                <t>
+                    <xref target="RFC6550"/> allows a node to select multiple
+                    preferred parents for route establishment. DCO can be used
+                    for route invalidation in such cases as well. There are no
+                    changes required in the DCO messaging to support
+                    multiple preferred parents and DCO should work
+                    seemlessly in such scenarios.
                 </t>
             </section>
         </section>
@@ -746,8 +761,8 @@
 
     <section anchor="Acknowledgements" title="Acknowledgements">
         <t>
-            Many thanks to Cenk Gundogan, Simon Duquennoy, and Georgios
-            Papadopoulous for their review and comments.
+            Many thanks to Cenk Gundogan, Simon Duquennoy, Georgios
+            Papadopoulous, Peter Van Der Stok for their review and comments.
         </t>
     </section>
 
@@ -782,10 +797,11 @@
 
     <section anchor="Security" title="Security Considerations">
         <t>
-            This document handles security considerations inline to base RPL.
-            Secure versions of DCO and DCO-ACK are added similar to other RPL
-            messages. For general RPL security considerations, see <xref
-                target="RFC6550"/>.
+            The document adds new messages (DCO, DCO-ACK) which are similar to
+            existing RPL messages such as DAO, DAO-ACK.  Secure versions of DCO
+            and DCO-ACK are added similar to other RPL messages (such as DAO,
+            DAO-ACK). For general RPL security considerations, see <xref
+            target="RFC6550"/>.
         </t>
     </section>
 </middle>
