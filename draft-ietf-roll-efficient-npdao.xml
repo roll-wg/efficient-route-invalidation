@@ -516,7 +516,9 @@
                 the common ancestor node to generate a DCO on behalf of the
                 target node. The I-bit is carried in the transit information
                 option which augments the reachability information for a given
-                set of RPL Target(s).
+                set of RPL Target(s). Transit information option should be
+                carried in the DAO message with I-bit set in case route
+                invalidation is sought for the correspondig target(s).
             </t>
             <t> <figure align="center" anchor="transit_info_with_i"
                     title="Updated Transit Information Option (New I flag
@@ -648,10 +650,13 @@
                 <t>
                     A DCO message may contain a Path Sequence in the transit
                     information option to identify the freshness of the DCO
-                    message. The Path Sequence in the DCO MUST use the
-                    same Path Sequence number present in the regular DAO
-                    message when the DCO is generated in response to DAO
-                    message.
+                    message. The Path Sequence in the DCO MUST use the same
+                    Path Sequence number present in the regular DAO message
+                    when the DCO is generated in response to DAO message. The
+                    DAO and DCO path sequence are picked from the same sequence
+                    number set. Thus if a DCO is received by a 6LR and
+                    subsequently a DAO is received with old seqeunce number,
+                    then the DAO should be ignored.
                 </t>
             </section>
 
