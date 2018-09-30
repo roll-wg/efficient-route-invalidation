@@ -34,7 +34,7 @@
 <?rfc subcompact="yes" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-roll-efficient-npdao-07" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-roll-efficient-npdao-08" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN"
@@ -130,22 +130,23 @@
          keywords will be used for the search engine. -->
 
     <abstract>
-      <t>This document describes the problems associated with the use of
-	  NPDAO messaging in RPL and signaling changes to improve route
-	  invalidation efficiency.</t>
+      <t>This document describes the problems associated with NPDAO messaging
+      used in RPL for route invalidation and signaling changes to improve route
+      invalidation efficiency.</t>
     </abstract>
   </front>
 
 <middle>
     <section title="Introduction">
         <t>
-            RPL <xref target="RFC6550"/> specifies a proactive distance-vector
-            based routing scheme. RPL has an optional messaging in the form of
-            DAO (Destination Advertisement Object) messages using which the
-            6LBR can learn route towards the nodes. In storing mode, DAO
-            messages would result in routing entries been created on all
-            intermediate hops from the node's parent all the way towards the
-            6LBR.
+            RPL <xref target="RFC6550"/> (Routing Protocol for Low power and
+            lossy networks) specifies a proactive distance-vector based routing
+            scheme. RPL has an optional messaging in the form of DAO
+            (Destination Advertisement Object) messages using which the 6LBR
+            (6Lo Border Router) and 6LR (6Lo Router) can learn route towards
+            the downstream nodes. In storing mode, DAO messages would result in
+            routing entries been created on all intermediate 6LRs from the
+            node's parent all the way towards the 6LBR.
         </t>
 
         <t>
@@ -175,21 +176,54 @@
                 "OPTIONAL" in this document are to be interpreted as described
                 in <xref target="RFC2119">RFC 2119</xref>.</t>
 
-            <t>DAO: Destination Advertisement Object</t>
-            <t>DIO: DODAG Information Object</t>
+            <t>
+                6LR: 6LoWPAN Router. This is an intermediate 6lowpan router
+                which allows traffic routing through itself in a multihop 6lo
+                network.
+            </t>
+            <t>
+                DAG: Directed Acyclic Graph. A directed graph having the
+                property that all edges are oriented in such a way that no
+                cycles exist.
+            </t>
+            <t>
+                DODAG: Destination-oriented DAG. A DAG rooted at a single
+                destination, i.e., at a single DAG root with no outgoing edges.
+            </t>
+            <t>
+                6LBR: 6LoWPAN Border Router. A border router which is a DODAG
+                root and is the edge node for traffic flowing in and out of the
+                6lo network.
+            </t>
+            <t>
+                DAO: Destination Advertisement Object. DAO messaging allows
+                downstream routes to the nodes to be established.
+            </t>
+            <t>
+                DIO: DODAG Information Object. DIO messaging allows upstream
+                routes to the 6LBR to be established. DIO messaging is
+                initiated at the DAO root.
+            </t>
 
-            <t>Common Ancestor node: 6LR node which is the first common node on
-                the old and new path for the child node.</t>
+            <t>
+                Common Ancestor node: 6LR/6LBR node which is the first common
+                node between two paths of a target node.
+            </t>
 
-            <t>NPDAO: No-Path DAO. A DAO message which has target with lifetime
-                0.</t>
+            <t>
+                NPDAO: No-Path DAO. A DAO message which has target with
+                lifetime 0.
+            </t>
 
             <t>
                 DCO: Destination Cleanup Object, A new RPL control message type
-                defined by this draft.
+                defined by this draft. DCO messaging improves proactive route
+                invalidation in RPL.
             </t>
 
-            <t>Regular DAO: A DAO message with non-zero lifetime.</t>
+            <t>
+                Regular DAO: A DAO message with non-zero lifetime.
+            </t>
 
             <t>LLN: Low Power and Lossy Networks.</t>
 
@@ -242,7 +276,7 @@
 
             <t>
                 Node (D) is connected via preferred parent (B). (D) has an
-                alternate path via (C) towards the BR. Node (A) is the common
+                alternate path via (C) towards the 6LBR. Node (A) is the common
                 ancestor for (D) for paths through (B)-(G) and (C)-(H). When
                 (D) switches from (B) to (C), RPL allows sending NPDAO to (B)
                 and regular DAO to (C).
@@ -283,8 +317,9 @@
                 a "sub-tree" switching from one parent to another. Thus the
                 route invalidation needs to be done on behalf of the sub-tree
                 and not the switching node alone. In the above example, when
-                Node (D) switches parent, the route invalidation needs to be
-                done for (D), (E) and (F). Thus without efficient route
+                Node (D) switches parent, the route updates needs to be done
+                for the routing tables entries of (C),(H),(A),(G), and (B) with
+                destination (D),(E) and (F). Without efficient route
                 invalidation, a 6LR may have to hold a lot of stale route
                 entries.
             </t>
@@ -311,7 +346,7 @@
             -->
         </section>
 
-        <section title="Invalidate routes to dependent nodes">
+        <section title="Invalidate routes of dependent nodes">
             <t>
                 RPL does not specify how route invalidation will work for
                 dependent nodes rooted at switching node, resulting in stale
@@ -323,9 +358,9 @@
             <t>
                 In the example topology, when Node (D) switches its parent,
                 Node (D) generates an NPDAO on its behalf. There is no NPDAO
-                generated by these child nodes through the previous path
-                resulting in stale entries on nodes (B) and (G) for nodes (E)
-                and (F).
+                generated by the dependent child nodes (E) and (F), through the
+                previous path via (D) to (B) and (G), resulting in stale
+                entries on nodes (B) and (G) for nodes (E) and (F).
             </t>
         </section>
 
@@ -341,8 +376,8 @@
             </t>
             <t>
                 In the example topology, consider Node (D) switches from parent
-                (B) to (C). An NPDAO sent from previous route may invalidate
-                the existing route whereas there is no way to determine whether
+                (B) to (C). An NPDAO sent via previous route may invalidate
+                the previous route whereas there is no way to determine whether
                 the new DAO has successfully updated the route entries on the
                 new path.
             </t>
@@ -352,7 +387,7 @@
     <section title="Requirements for the NPDAO Optimization">
 
         <section title="Req#1: Tolerant to link failures to the previous
-            parents">
+            parent">
             <t>
                 When the switching node sends the NPDAO message to the previous
                 parent, it is normal that the link to the previous parent is
@@ -473,8 +508,9 @@
                 adds new pro-active route invalidation message called as
                 "Destination Cleanup Object" (DCO) that originates at a common
                 ancestor node between the new and old path. The common ancestor
-                node generates a DCO in response to the change in the
-                next-hop on receiving a regular DAO for the target.
+                node generates a DCO in response to the change in the next-hop
+                on receiving a regular DAO with updated path sequence for the
+                target.
             </t>
 
             <t>
@@ -491,10 +527,8 @@
                 It finds however that the next hop information for reaching
                 node D has changed i.e. the node D has decided to change the
                 paths. In this case, Node A which is the common ancestor node
-                for node D along the two paths (previous and new), may generate
-                a DCO which traverses downwards in the network. The document
-                in the subsequent section will explain the message format
-                changes to handle this downward flow of NPDAO.
+                for node D along the two paths (previous and new), should generate
+                a DCO which traverses downwards in the network.
             </t>
 
         </section>
@@ -504,7 +538,7 @@
                 additional Options. The base fields apply to the message as a
                 whole and options are appended to add message/use-case specific
                 attributes. As an example, a DAO message may be attributed by
-                one or more "RPL Target" options which specifies the
+                one or more "RPL Target" options which specify the
                 reachability information for the given targets. Similarly, a
                 Transit Information option may be associated with a set of RPL
                 Target options.
@@ -590,7 +624,11 @@
             </t>
             <t>
                 K: The 'K' flag indicates that the recipient is expected to send
-                a DCO-ACK back.
+                a DCO-ACK back. If the DCO-ACK is not received even after
+                setting the 'K', an implementation may choose to retry the DCO
+                at a later time. The number of retries are implementation and
+                deployment dependent. This document recommends using retries
+                similar to what will be set for DAO-ACK handling.
             </t>
             <t>
                 D: The 'D' flag indicates that the DODAGID field is present.
@@ -607,7 +645,8 @@
             </t>
             <t>
                 DCOSequence: Incremented at each unique DCO message from a node
-                and echoed in the DCO-ACK message.
+                and echoed in the DCO-ACK message. The initial DCOSequence can
+                be chosen randomly by the node.
             </t>
             <t>
                 DODAGID (optional): 128-bit unsigned integer set by a DODAG root
@@ -693,8 +732,8 @@
                     zero by the sender and MUST be ignored by the receiver.
                 </t>
                 <t>
-                    DCOSequence: Incremented at each unique DCO message from a node
-                    and echoed in the DCO-ACK message.
+                    DCOSequence: The DCOSequence in DCO-ACK is copied from the
+                    DCOSequence received in the DCO message.
                 </t>
                 <t>
                     Status: Indicates the completion.  Status 0 is defined as
@@ -754,11 +793,32 @@
             <section title="DCO with multiple preferred parents">
                 <t>
                     <xref target="RFC6550"/> allows a node to select multiple
-                    preferred parents for route establishment. DCO can be used
-                    for route invalidation in such cases as well. There are no
-                    changes required in the DCO messaging to support
-                    multiple preferred parents and DCO should work
-                    seemlessly in such scenarios.
+                    preferred parents for route establishment.  Section 9.2.1
+                    of <xref target="RFC6550"/> specifies, "All DAOs generated
+                    at the same time for the same Target MUST be sent with the
+                    same Path Sequence in the Transit Information". Thus a DAO
+                    message with the same path sequence MUST be sent to all the
+                    parents. Subsequently when route invalidation has to be
+                    initiated, RPL mentions that an NPDAO must be initiated
+                    with updated path sequence to all the routes to be
+                    invalidated.
+                </t>
+                <t>
+                    With DCO, the Target node itself does not initiate the
+                    route invalidation and it is left to the common ancestor
+                    node. A common ancestor node when it discovers an updated
+                    DAO from a new next-hop, it initiates a DCO. With multiple
+                    preferred parents, this handling does not change. But in
+                    this case it is recommended that an implementation initiates a
+                    DCO after a time period such that the common ancestor node
+                    may receive updated DAOs from all possible next-hops. This
+                    will help to reduce DCO control overhead i.e., the common
+                    ancestor can wait for updated DAOs from all possible
+                    directions before initiating a DCO for route invalidation.
+                    The time period for initiating a DCO could be based on the
+                    depth of the network. After timeout, the DCO needs to be
+                    generated for all the next-hops for whom the route
+                    invalidation needs to be done.
                 </t>
             </section>
         </section>
@@ -802,11 +862,36 @@
 
     <section anchor="Security" title="Security Considerations">
         <t>
-            The document adds new messages (DCO, DCO-ACK) which are similar to
-            existing RPL messages such as DAO, DAO-ACK.  Secure versions of DCO
-            and DCO-ACK are added similar to other RPL messages (such as DAO,
-            DAO-ACK). For general RPL security considerations, see <xref
-            target="RFC6550"/>.
+            All RPL messages support a secure version of messages which allows
+            integrity protection using either a MAC or a signature. Optionally,
+            secured RPL messages also have encryption protection for
+            confidentiality.
+        </t>
+        <t>
+            The document adds new messages (DCO, DCO-ACK) which are
+            syntactically similar to existing RPL messages such as DAO,
+            DAO-ACK.  Secure versions of DCO and DCO-ACK are added similar to
+            other RPL messages (such as DAO, DAO-ACK).
+        </t>
+        <t>
+            RPL supports three security modes as mentioned in Section 10.1 of
+            <xref target="RFC6550"/>:
+            <list style="numbers">
+                <t>
+                    Unsecured: In this mode, it is expected that the RPL control messages
+                    are secured by other security mechanisms, such as
+                    link-layer security. In this mode, the RPL control messages,
+                    including DCO, DCO-ACK, do not have Security sections.
+                </t>
+                <t>
+                    Preinstalled: In this mode, RPL uses secure messages. Thus
+                    secure versions of DCO, DCO-ACK MUST be used in this mode.
+                </t>
+                <t>
+                    Authenticated: In this mode, RPL uses secure messages. Thus
+                    secure versions of DCO, DCO-ACK MUST be used in this mode.
+                </t>
+            </list>
         </t>
     </section>
 </middle>
@@ -836,7 +921,8 @@
         <?rfc include="reference.I-D.ietf-6tisch-architecture.xml"?>
     </references>
 
-    <section anchor="app-additional" title="Example DCO Messaging">
+    <section anchor="app-additional" title="Example Messaging">
+        <section title="Example DCO Messaging">
         <t>
             In <xref target="sample_top"/>, node (D) switches its parent from
             (B) to (C). The sequence of actions is as follows:
@@ -883,6 +969,77 @@
                     dropped.</t>
 
         </list></t>
+        </section>
+        <section title="Example DCO Messaging with multiple preferred parents">
+            <t> <figure align="center" anchor="sample_top_mpp" title="Sample
+                    topology 2"> <artwork align="center"><![CDATA[
+        (6LBR)
+          |
+          |
+          |
+        (N11)
+         / \
+        /   \
+       /     \
+    (N21)   (N22)
+      /      / \
+     /      /   \
+    /      /     \
+ (N31)  (N32)  (N33)
+     :    |    /
+      :   |   /
+       :  |  /
+        (N41)
+                        ]]></artwork> </figure> </t>
+            <t>
+                In <xref target="sample_top_mpp"/>, node (N41) selects multiple
+                preferred parents (N32) and (N33).
+                The sequence of actions is as follows:
+                <list style="numbers">
+                    <t>
+                        (N41) sends DAO(tgt=N41,PS=x,I_flag=1) to (N32) and (N33).
+                        Here I_flag refers to the Invalidation flag and PS refers to
+                        Path Sequence in Transit Information option.
+                    </t>
+
+                    <t>
+                        (N32) sends DAO(tgt=N41,PS=x,I_flag=1) to (N22). (N33) also
+                        sends DAO(tgt=N41,PS=x,I_flag=1) to (N22). (N22) learns
+                        multiple routes for the same destination (N41) through
+                        multiple next-hops. The route table at N22 should
+                        contain (Dst,NextHop,PS): { (N41,N32,x), (N41,N33,x) }.
+                    </t>
+
+                    <t>
+                        (N22) sends DAO(tgt=N41,PS=x,I_flag=1) to (N11).
+                    </t>
+
+                    <t>
+                        (N11) sends DAO(tgt=N41,PS=x,I_flag=1) to (6LBR). Thus the
+                        complete path is established.
+                    </t>
+
+                    <t>
+                        (N41) decides to change preferred parent set from {
+                        N32, N33 } to { N31, N32 }.
+                    </t>
+
+                    <t>
+                        (N41) sends DAO(tgt=N41,PS=x+1,I_flag=1) to (N32). (N41)
+                        sends DAO(tgt=N41,PS=x+1,I_flag=1) to (N31).
+                    </t>
+
+                    <t>
+                        (N32) sends DAO(tgt=N41,PS=x+1,I_flag=1) to (N22). (N22) has
+                        multiple routes to destination (N41). It sees that a
+                        new path sequence for Target=N41 is received and thus
+                        it waits for pre-determined time period to invalidate
+                        another route {(N41),(N33),x}. After time period, (N22)
+                        sends DCO(tgt=N41,PS=x+1) to (N33).
+                    </t>
+
+            </list></t>
+        </section>
     </section>
 
 </back>
