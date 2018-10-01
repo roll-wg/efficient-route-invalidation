@@ -386,16 +386,17 @@
 
     <section title="Requirements for the NPDAO Optimization">
 
-        <section title="Req#1: Tolerant to link failures to the previous
+        <section title="Req#1: Remove messaging dependency on link to the previous
             parent">
             <t>
                 When the switching node sends the NPDAO message to the previous
                 parent, it is normal that the link to the previous parent is
-                prone to failure.  Therefore, it is required that the route
-                invalidation does not depend on the previous link which is
-                prone to failure. The previous link referred here represents
-                the link between the node and its previous parent (from whom
-                the node is now disassociating).
+                prone to failure (thats why the node decided to switch).
+                Therefore, it is required that the route invalidation does not
+                depend on the previous link which is prone to failure. The
+                previous link referred here represents the link between the
+                node and its previous parent (from whom the node is now
+                disassociating).
             </t>
         </section>
 
