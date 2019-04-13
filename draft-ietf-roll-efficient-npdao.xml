@@ -34,7 +34,7 @@
 <?rfc subcompact="yes" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-roll-efficient-npdao-08" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-roll-efficient-npdao-09" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN"
@@ -917,10 +917,11 @@
         &RFC2119;
     </references>
 
+    <!--
     <references title="Informative References">
-        <!-- Here we use entities that we defined at the beginning. -->
         <?rfc include="reference.I-D.ietf-6tisch-architecture.xml"?>
     </references>
+    -->
 
     <section anchor="app-additional" title="Example Messaging">
         <section title="Example DCO Messaging">
