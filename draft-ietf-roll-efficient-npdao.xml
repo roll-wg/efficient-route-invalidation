@@ -399,7 +399,7 @@
         </section>
     </section>
 
-    <section title="Requirements for the NPDAO Optimization">
+    <section title="Requirements for the NPDAO Optimization" anchor="requirements">
 
         <section title="Req#1: Remove messaging dependency on link to the previous
             parent">
@@ -523,17 +523,27 @@
                 mentioned in <xref target="current_npdao_problems"/>, the
                 document adds a new pro-active route invalidation message
                 called "Destination Cleanup Object" (DCO) that originates at a
-                common ancestor node between the new and old path. The common
-                ancestor node generates a DCO in response to the change in the
-                next-hop on receiving a regular DAO with updated Path Sequence
-                for the target.
+                common ancestor node and flows downstream between the new and
+                old path. The common ancestor node generates a DCO in response
+                to the change in the next-hop on receiving a regular DAO with
+                updated Path Sequence for the target.
+            </t>
+            <t>
+                The 6LRs in the path for DCO take action such as route
+                invalidation based on the DCO information and subsequently send
+                another DCO with the same information downstream to the next
+                hop. This operation is similar to how the DAOs are handled on
+                intermediate 6LRs in storing MOP in <xref target="RFC6550"/>.
+                Just like DAO in storing MOP, the DCO is sent using link-local
+                unicast source and destination IPv6 address. Unlike DAO, which
+                always travels upstream, the DCO always travels downstream.
             </t>
 
             <t>
                 In <xref target="sample_top"/>, when node D decides to
                 switch the path from B to C, it sends a regular DAO to node C
                 with reachability information containing target as address of D
-                and a incremented Path Sequence number. Node C will update the
+                and an incremented Path Sequence. Node C will update the
                 routing table based on the reachability information in the DAO and
                 in turn generate another DAO with the same reachability
                 information and forward it to H. Node H also follows the same
@@ -639,15 +649,15 @@
                 associated with the DODAG, as learned from the DIO.
             </t>
             <t>
-                K: The 'K' flag indicates that the recipient is expected to
-                send a DCO-ACK back. If the DCO-ACK is not received even after
-                setting the 'K' flag, an implementation may retry the DCO at a
-                later time. The number of retries are implementation and
-                deployment dependent. A node receiving a DCO message without
-                the 'K' flag set MAY respond with a DCO-ACK, especially to
-                report an error condition. An example error condition could be
-                that the node sending the DCO-ACK does not find the routing
-                entry for the indicated target.
+                K: The 'K' flag indicates that the recipient of DCO message is
+                expected to send a DCO-ACK back. If the DCO-ACK is not received
+                even after setting the 'K' flag, an implementation may retry
+                the DCO at a later time. The number of retries are
+                implementation and deployment dependent. A node receiving a DCO
+                message without the 'K' flag set MAY respond with a DCO-ACK,
+                especially to report an error condition. An example error
+                condition could be that the node sending the DCO-ACK does not
+                find the routing entry for the indicated target.
             </t>
             <t>
                 D: The 'D' flag indicates that the DODAGID field is present.
@@ -669,11 +679,10 @@
             </t>
             <t>
                 DODAGID (optional): 128-bit unsigned integer set by a DODAG
-                root that uniquely identifies a DODAG.  This field is only
-                present when the 'D' flag is set.  This field is only present
+                root that uniquely identifies a DODAG.  This field MUST be
+                present when the 'D' flag is set.  DODAGID is typically used
                 when a local RPLInstanceID is in use, in order to identify the
-                DODAGID that is associated with the RPLInstanceID.  When a
-                global RPLInstanceID is in use, this field need not be present.
+                DODAGID that is associated with the RPLInstanceID.
                 Unassigned bits of the DCO Base are reserved.  They MUST be set
                 to zero on transmission and MUST be ignored on reception.
             </t>
@@ -788,6 +797,52 @@
             </section>
         </section>
 
+        <section title="DCO Base Rules">
+            <t>
+                <list style="numbers">
+                    <t>
+                        If a node sends a DCO message with newer or different
+                        information than the prior DCO message transmission, it
+                        MUST increment the DCOSequence field by at least one.
+                        A DCO message transmission that is identical to the
+                        prior DCO message transmission MAY increment the
+                        DCOSequence field.
+                    </t>
+                    <t>
+                        The RPLInstanceID and DODAGID fields of a DCO message
+                        MUST be the same value as that of the DAO message in
+                        response to which the DCO is generated on the common
+                        ancestor node.
+                    </t>
+                    <t>
+                        A node MAY set the 'K' flag in a unicast DCO message to
+                        solicit a unicast DCO-ACK in response in order to
+                        confirm the attempt.
+                    </t>
+                    <t>
+                        A node receiving a unicast DCO message with the 'K'
+                        flag set SHOULD respond with a DCO-ACK. A node
+                        receiving a DCO message without the 'K' flag set MAY
+                        respond with a DCO-ACK, especially to report an error
+                        condition.
+                    </t>
+                    <t>
+                        A node that sets the 'K' flag in a unicast DCO message
+                        but does not receive DCO-ACK in response MAY reschedule
+                        the DCO message transmission for another attempt, up
+                        until an implementation specific number of retries.
+                    </t>
+                    <t>
+                        Node SHOULD ignore DCOs without newer sequence numbers
+                        and MUST not process them further.
+                    </t>
+                </list>
+            </t>
+            <t>
+                The scope of DCOSequence values is unique to each node.
+            </t>
+        </section>
+
         <section title="Other considerations">
             <section title="Dependent Nodes invalidation">
                 <t>
@@ -802,6 +857,15 @@
                     request invalidation of previous route from the common
                     ancestor node.
                 </t>
+                <t>
+                    Dependent nodes do not have any indication regarding if any
+                    of its parent nodes in turn have decided to switch their
+                    parent. Thus for route invalidation the dependent nodes may
+                    choose to always set the 'I' bit in all its DAO message's
+                    Transit Information Option. Note that setting the I-bit is
+                    not counter productive even if there is no previous
+                    route to be invalidated.
+                </t>
             </section>
             <section title="NPDAO and DCO in the same network">
                 <t>
@@ -811,8 +875,39 @@
                     happens or when the node simply decides to gracefully
                     terminate the RPL session on graceful node shutdown.
                     Moreover a deployment can have a mix of nodes
-                    supporting the proposed DCO and the existing NPDAO
-                    mechanism.
+                    supporting the DCO and the existing NPDAO mechanism. It is
+                    also possible that the same node supports both the NPDAO
+                    and DCO signalling.
+                </t>
+                <t>
+                    Section 9.8 of <xref target="RFC6550"/> states, "When a
+                    node removes a node from its DAO parent set, it SHOULD
+                    send a No-Path DAO message to that removed DAO parent to
+                    invalidate the existing router". This document introduces
+                    an alternate and more optimized way of route invalidation
+                    but it also allows existing NPDAO messaging to work. Thus
+                    an implementation has two choices to make when a route
+                    invalidation is to be initiated:
+                </t>
+                <t>
+                    <list style="numbers">
+                        <t>
+                            Use NPDAO to invalidate the previous route and
+                            send regular DAO on the new path.
+                        </t>
+                        <t>
+                            Send regular DAO on the new path with the 'I'
+                            bit set in the Transit Information Option such
+                            that the common ancestor node initiates the DCO
+                            message downstream to invalidate the previous
+                            route.
+                        </t>
+                    </list>
+                </t>
+                <t>
+                    This document recommends using option 2 for reasons
+                    specified in <xref target="requirements"/> in this
+                    document.
                 </t>
             </section>
             <section title="DCO with multiple preferred parents">
@@ -821,12 +916,10 @@
                     preferred parents for route establishment.  Section 9.2.1
                     of <xref target="RFC6550"/> specifies, "All DAOs generated
                     at the same time for the same Target MUST be sent with the
-                    same Path Sequence in the Transit Information". Thus a DAO
-                    message with the same Path Sequence MUST be sent to all the
-                    parents. Subsequently when route invalidation has to be
-                    initiated, RPL mentions that an NPDAO must be initiated
-                    with updated Path Sequence to all the routes to be
-                    invalidated.
+                    same Path Sequence in the Transit Information".
+                    Subsequently when route invalidation has to be initiated,
+                    RPL mentions that an NPDAO must be initiated with an
+                    updated Path Sequence to all the routes to be invalidated.
                 </t>
                 <t>
                     With DCO, the Target node itself does not initiate the
@@ -834,16 +927,29 @@
                     node. A common ancestor node when it discovers an updated
                     DAO from a new next-hop, it initiates a DCO. With multiple
                     preferred parents, this handling does not change. But in
-                    this case it is recommended that an implementation initiates a
-                    DCO after a time period such that the common ancestor node
-                    may receive updated DAOs from all possible next-hops. This
-                    will help to reduce DCO control overhead i.e., the common
-                    ancestor can wait for updated DAOs from all possible
-                    directions before initiating a DCO for route invalidation.
-                    The time period for initiating a DCO could be based on the
-                    depth of the network. After timeout, the DCO needs to be
+                    this case it is recommended that an implementation
+                    initiates a DCO after a time period (DelayDCO) such that
+                    the common ancestor node may receive updated DAOs from all
+                    possible next-hops. This will help to reduce DCO control
+                    overhead i.e., the common ancestor can wait for updated
+                    DAOs from all possible directions before initiating a DCO
+                    for route invalidation.  After timeout, the DCO needs to be
                     generated for all the next-hops for whom the route
                     invalidation needs to be done.
+                </t>
+                <t>
+                    This documents recommends using a DelayDCO timer value of
+                    1sec.  This value is inspired by the default DelayDAO value
+                    of 1sec in <xref target="RFC6550"/>. Here the hypothesis is
+                    that the DAOs from all possible parent set would be
+                    received on the common ancestor within this time period.
+                </t>
+                <t>
+                    Note that there is no requirement of synchronization
+                    between DCO and DAOs. The DelayDCO timer simply ensures
+                    that the DCO control overhead can be reduced and is only
+                    needed when the network contains nodes using multiple
+                    preferred parent.
                 </t>
             </section>
         </section>
@@ -851,8 +957,10 @@
 
     <section anchor="Acknowledgements" title="Acknowledgements">
         <t>
-            Many thanks to Cenk Gundogan, Simon Duquennoy, Georgios
+            Many thanks to Alvaro Retana, Cenk Gundogan, Simon Duquennoy, Georgios
             Papadopoulous, Peter Van Der Stok for their review and comments.
+            Alvaro Retana helped shape this document's final version with
+            critical review comments.
         </t>
     </section>
 
