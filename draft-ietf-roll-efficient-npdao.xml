@@ -680,11 +680,9 @@
             <t>
                 DODAGID (optional): 128-bit unsigned integer set by a DODAG
                 root that uniquely identifies a DODAG.  This field MUST be
-                present when the 'D' flag is set.  DODAGID is typically used
-                when a local RPLInstanceID is in use, in order to identify the
-                DODAGID that is associated with the RPLInstanceID.
-                Unassigned bits of the DCO Base are reserved.  They MUST be set
-                to zero on transmission and MUST be ignored on reception.
+                present when the 'D' flag is set.  DODAGID is used when a local
+                RPLInstanceID is in use, in order to identify the DODAGID that
+                is associated with the RPLInstanceID.
             </t>
 
             <section title="Secure DCO">
@@ -698,9 +696,10 @@
 
             <section title="DCO Options">
                 <t>
-                    The DCO message MAY carry valid options.  This
-                    specification allows for the DCO message to carry the
-                    following options:
+                    The DCO message MUST carry atleast one RPL Target and the
+                    Transit Information Option and MAY carry other valid
+                    options.  This specification allows for the DCO message to
+                    carry the following options:
                     <list>
                         <t>0x00 Pad1</t>
                         <t>0x01 PadN</t>
@@ -710,7 +709,9 @@
                     </list>
                     The DCO carries an RPL Target Option and an associated
                     Transit Information Option with a lifetime of 0x00000000 to
-                    indicate a loss of reachability to that Target.
+                    indicate a loss of reachability to that Target. The
+                    lifetime indicated in the Transit Information Option of the
+                    DCO message MUST be set to 0x00000000.
                 </t>
             </section>
             <section title="Path Sequence number in the DCO">
@@ -720,16 +721,17 @@
                     message. The Path Sequence in the DCO MUST use the same
                     Path Sequence number present in the regular DAO message
                     when the DCO is generated in response to a DAO message. The
-                    DAO and DCO Path Sequence are picked from the same sequence
-                    number set. Thus if a DCO is received by a 6LR and
-                    subsequently a DAO is received with old seqeunce number,
-                    then the DAO should be ignored.
+                    Path Sequence present in the Transit Information Option of
+                    the DAO and the correspondingly triggered DCO MUST be same.
+                    Thus if a DCO is received by a 6LR and subsequently a DAO
+                    is received with an old seqeunce number, then the DAO
+                    MUST be ignored.
                 </t>
             </section>
 
             <section title="Destination Cleanup Option Acknowledgement (DCO-ACK)">
                 <t>
-                    The DCO-ACK message MUST be sent as a unicast packet by a
+                    The DCO-ACK message SHOULD be sent as a unicast packet by a
                     DCO recipient in response to a unicast DCO message with 'K'
                     flag set. If 'K' flag is not set then the receiver of the
                     DCO message MAY send a DCO-ACK to signal an error
@@ -775,15 +777,11 @@
                     remaining status values are reserved as rejection codes.
                 </t>
                 <t>
-                    DODAGID (optional): 128-bit unsigned integer set by a DODAG root
-                    that uniquely identifies a DODAG.  This field is only present
-                    when the 'D' flag is set.  This field is typically only present
-                    when a local RPLInstanceID is in use, in order to identify the
-                    DODAGID that is associated with the RPLInstanceID. When a
-                    global RPLInstanceID is in use, this field need not be present.
-                    Unassigned bits of the DCO-ACK Base are reserved.  They
-                    MUST be set to zero on transmission and MUST be ignored on
-                    reception.
+                    DODAGID (optional): 128-bit unsigned integer set by a DODAG
+                    root that uniquely identifies a DODAG.  This field MUST be
+                    present when the 'D' flag is set.  DODAGID is used when a local
+                    RPLInstanceID is in use, in order to identify the DODAGID that
+                    is associated with the RPLInstanceID.
                 </t>
             </section>
 
@@ -827,14 +825,23 @@
                         condition.
                     </t>
                     <t>
+                        A node receiving a unicast DCO message MUST verify the
+                        stored Path Sequence in context to the given target. If
+                        the stored Path Sequence is more fresh i.e. newer than
+                        the Path Sequence received in the DCO, then the DCO
+                        MUST be dropped.
+                    </t>
+                    <t>
                         A node that sets the 'K' flag in a unicast DCO message
                         but does not receive DCO-ACK in response MAY reschedule
                         the DCO message transmission for another attempt, up
                         until an implementation specific number of retries.
                     </t>
                     <t>
-                        Node SHOULD ignore DCOs without newer sequence numbers
-                        and MUST not process them further.
+                        A node receiving a unicast DCO message with its own
+                        address in the RPL Target Option MUST strip-off that
+                        Target Option. If this Target Option is the only one in
+                        the DCO message then the DCO message MUST be dropped.
                     </t>
                 </list>
             </t>
@@ -918,8 +925,9 @@
                     at the same time for the same Target MUST be sent with the
                     same Path Sequence in the Transit Information".
                     Subsequently when route invalidation has to be initiated,
-                    RPL mentions that an NPDAO must be initiated with an
-                    updated Path Sequence to all the routes to be invalidated.
+                    RPL mentions use of NPDAO which can be initiated with an
+                    updated Path Sequence to all the parent nodes through which
+                    the route is to be invalidated.
                 </t>
                 <t>
                     With DCO, the Target node itself does not initiate the
@@ -1027,12 +1035,11 @@
                 <c>This document</c>
             </texttable>
         </section>
-        <!--
-        <section title="New Registry for the Destination Cleanup Object (DCO)
-        Status field">
+        <section title="New Registry for the Destination Cleanup Object
+            Acknowledgement (DCO-ACK) Status field">
             <t>
                 IANA has created a registry for the 8-bit Destination Cleanup
-                Object (DCO) Status field.
+                Object Acknowledgement (DCO-ACK) Status field.
             </t>
             <t>
                 New Status values may be allocated only by an IETF Review.  Each
@@ -1060,7 +1067,6 @@
                 <c>This document</c>
             </texttable>
         </section>
-        -->
         <section title="New Registry for the Destination Cleanup Object (DCO)
         Acknowledgement Flags">
             <t>
@@ -1094,6 +1100,20 @@
 
     <section anchor="Security" title="Security Considerations">
         <t>
+            This document introduces the ability for a common ancestor node to
+            invalidate a route on behalf of the target node. The common
+            ancestor node is directed to do so by the target node using the 'I'
+            bit in DCO's Transit Information Option. However, the common
+            ancestor node is in a position to unilaterally initiate the route
+            invalidation since it possesses all the required state information
+            namely, the Target address and the correspond Path Sequence. Thus a
+            rogue common ancestor node could initiate such an invalidation and
+            impact the traffic to the target node. This document assumes that
+            the security mechanisms as defined in <xref target="RFC6550"/> are
+            followed, which means that the common ancestor node is part of the
+            RPL network because it has the required credentials.
+        </t>
+        <t>
             All RPL messages support a secure version of messages which allows
             integrity protection using either a MAC or a signature. Optionally,
             secured RPL messages also have encryption protection for
@@ -1113,7 +1133,11 @@
                     Unsecured: In this mode, it is expected that the RPL control messages
                     are secured by other security mechanisms, such as
                     link-layer security. In this mode, the RPL control messages,
-                    including DCO, DCO-ACK, do not have Security sections.
+                    including DCO, DCO-ACK, do not have Security sections. A
+                    DCO and DCO-ACK message which is not encrypted at
+                    link-layer MUST not be handled by the RPL layer. Also all
+                    the DCO and DCO-ACK messages that are transmitted MUST be
+                    link-layer encrypted.
                 </t>
                 <t>
                     Preinstalled: In this mode, RPL uses secure messages. Thus
@@ -1149,17 +1173,20 @@
         &RFC8174;
     </references>
 
-    <!--
-    <references title="Informative References">
-        <?rfc include="reference.I-D.ietf-6tisch-architecture.xml"?>
-    </references>
-    -->
-
     <section anchor="app-additional" title="Example Messaging">
         <section title="Example DCO Messaging">
         <t>
             In <xref target="sample_top"/>, node (D) switches its parent from
-            (B) to (C). The sequence of actions is as follows:
+            (B) to (C). This example assumes that Node D has already
+            established its own route via Node B-G-A-6LBR using pathseq=x. The
+            example uses DAO and DCO messaging convention and specifies only
+            the required parameters to explain the example namely, the
+            parameter 'tgt', which stands for Target Option and value of this
+            parameter specifies the address of the target node. The parameter
+            'pathseq', which specifies the Path Sequence value carried in the
+            Transit Information Option. The parameter 'I_flag' specifies the
+            'I' bit in the Transit Information Option.
+            sequence of actions is as follows:
             <list style="numbers">
                 <t>Node D switches its parent from node B to node C</t>
 
@@ -1169,40 +1196,52 @@
                 <t>C checks for a routing entry on behalf of D, since it cannot
                     find an entry on behalf of D it creates a new routing entry
                     and forwards the reachability information of the target D
-                    to H in a DAO.</t>
+                    to H in a DAO(tgt=D,pathseq=x+1,I_flag=1).</t>
 
                 <t>Similar to C, node H checks for a routing entry on behalf of
                     D, cannot find an entry and hence creates a new routing
                     entry and forwards the reachability information of the
-                    target D to H in a DAO.</t>
+                    target D to A in a DAO(tgt=D,pathseq=x+1,I_flag=1).</t>
 
-                <t>Node A receives the DAO, and checks for a routing entry on
-                    behalf of D. It finds a routing entry but checks that the
-                    next hop for target D is now changed. Node A checks the
-                    I_flag and generates DCO(tgt=D,pathseq=pathseq(DAO)) to
-                    previous next hop for target D which is G. Subsequently, A
-                    updates the routing entry and forwards the reachability
-                    information of target D upstream
-                    DAO(tgt=D,pathseq=x+1,I_flag=x) (the I_flag carries no
-                    significance henceforth).</t>
+                <t>
+                    Node A receives the DAO(tgt=D,pathseq=x+1,I_flag=1), and
+                    checks for a routing entry on behalf of D. It finds a
+                    routing entry but checks that the next hop for target D is
+                    different (i.e. Node G). Node A checks the I_flag and
+                    generates DCO(tgt=D,pathseq=x+1) to previous next hop for
+                    target D which is G. Subsequently, Node A updates the
+                    routing entry and forwards the reachability information of
+                    target D upstream DAO(tgt=D,pathseq=x+1,I_flag=1).
+                </t>
 
-                <t>Node G receives the DCO and invalidates routing entry of
-                    target D and forwards the (un)reachability information
-                    downstream to B.</t>
-
-                <t>Similarly, B processes the DCO by invalidating the routing
+                <t>
+                    Node G receives the DCO(tgt=D,pathseq=x+1). It checks if the
+                    received path sequence is latest as compared to the stored
+                    path sequence. If it is latest, Node G invalidates routing
                     entry of target D and forwards the (un)reachability
-                    information downstream to D.</t>
+                    information downstream to B in DCO(tgt=D,pathseq=x+1).
+                </t>
 
-                <t>D ignores the DCO since the target is itself.</t>
+                <t>
+                    Similarly, B processes the DCO(tgt=D,pathseq=x+1) by
+                    invalidating the routing entry of target D and forwards the
+                    (un)reachability information downstream to D.
+                </t>
 
-                <t>The propagation of the DCO will stop at any node where the
+                <t>
+                    D ignores the DCO(tgt=D,pathseq=x+1) since the target is
+                    itself.
+                </t>
+
+                <t>
+                    The propagation of the DCO will stop at any node where the
                     node does not have an routing information associated with
-                    the target. If the routing information is present and the
-                    pathseq associated is not older, then still the DCO is
-                    dropped.</t>
+                    the target. If the routing information is present and its
+                    Path Sequence is higher, then still the DCO is dropped.
+                </t>
 
-        </list></t>
+            </list>
+            </t>
         </section>
         <section title="Example DCO Messaging with multiple preferred parents">
             <t> <figure align="center" anchor="sample_top_mpp" title="Sample
@@ -1240,8 +1279,13 @@
                         (N32) sends DAO(tgt=N41,PS=x,I_flag=1) to (N22). (N33) also
                         sends DAO(tgt=N41,PS=x,I_flag=1) to (N22). (N22) learns
                         multiple routes for the same destination (N41) through
-                        multiple next-hops. The route table at N22 should
-                        contain (Dst,NextHop,PS): { (N41,N32,x), (N41,N33,x) }.
+                        multiple next-hops. (N22) may receive the DAOs from
+                        (N32) and (N33) in any order with the I_flag set. The
+                        implementation should use the DelayDCO timer to wait to
+                        initiate the DCO. If (N22) receives an updated DAO from
+                        all the paths then the DCO need not be initiated in
+                        this case. Thus the route table at N22 should contain
+                        (Dst,NextHop,PS): { (N41,N32,x), (N41,N33,x) }.
                     </t>
 
                     <t>
@@ -1264,12 +1308,46 @@
                     </t>
 
                     <t>
-                        (N32) sends DAO(tgt=N41,PS=x+1,I_flag=1) to (N22). (N22) has
-                        multiple routes to destination (N41). It sees that a
-                        new Path Sequence for Target=N41 is received and thus
-                        it waits for pre-determined time period to invalidate
-                        another route {(N41),(N33),x}. After time period, (N22)
-                        sends DCO(tgt=N41,PS=x+1) to (N33).
+                        (N32) sends DAO(tgt=N41,PS=x+1,I_flag=1) to (N22).
+                        (N22) has multiple routes to destination (N41). It sees
+                        that a new Path Sequence for Target=N41 is received and
+                        thus it waits for pre-determined time period (DelayDCO
+                        time period) to invalidate another route
+                        {(N41),(N33),x}. After time period, (N22) sends
+                        DCO(tgt=N41,PS=x+1) to (N33). Also (N22) sends the
+                        regular DAO(tgt=N41,PS=x+1,I_flag=1) to (N11).
+                    </t>
+
+                    <t>
+                        (N33) receives DCO(tgt=N41,PS=x+1). The received Path
+                        Sequence is latest and thus it invalidates the entry
+                        associated with target (N41). (N33) then sends the
+                        DCO(tgt=N41,PS=x+1) to (N41). (N41) sees itself as the
+                        target and drops the DCO.
+                    </t>
+
+                    <t>
+                        From Step 6 above, (N31) receives the
+                        DAO(tgt=N41,PS=x+1,I_flag=1). It creates a routing
+                        entry and sends the DAO(tgt=N41,PS=x+1,I_flag=1) to
+                        (N21). Similarly (N21) receives the DAO and
+                        subsequently sends the DAO(tgt=N41,PS=x+1,I_flag=1) to
+                        (N11).
+                    </t>
+
+                    <t>
+                        (N11) receives DAO(tgt=N41,PS=x+1,I_flag=1) from (N21).
+                        It waits for DelayDCO timer since it has multiple
+                        routes to (N41). (N41) will receive
+                        DAO(tgt=N41,PS=x+1,I_flag=1) from (N22) from Step 7
+                        above. Thus (N11) has received regular
+                        DAO(tgt=N41,PS=x+1,I_flag=1) from all paths and thus
+                        does not initiate DCO.
+                    </t>
+
+                    <t>
+                        (N11) forwards the DAO(tgt=N41,PS=x+1,I_flag=1) to 6LBR
+                        and the full path is established.
                     </t>
 
             </list></t>
