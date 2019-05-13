@@ -35,7 +35,7 @@
 <?rfc subcompact="yes" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-roll-efficient-npdao-10" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-roll-efficient-npdao-11" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN"
@@ -97,7 +97,7 @@
         <postal>
           <street>W Chang'an Ave</street>
           <city>Beijing</city>
-          <country>China</country>
+          <country>P.R. China</country>
         </postal>
         <email>zhencao.ietf@gmail.com</email>
       </address>
@@ -341,8 +341,7 @@
         </section>
     </section>
 
-    <section anchor="current_npdao_problems" title="Problems with current
-        NPDAO messaging">
+    <section anchor="current_npdao_problems" title="Problems with current NPDAO messaging">
         <section title="Lost NPDAO due to link break to the previous parent">
             <t>
                 When a node switches its parent, the NPDAO is to be sent to
@@ -401,8 +400,7 @@
 
     <section title="Requirements for the NPDAO Optimization" anchor="requirements">
 
-        <section title="Req#1: Remove messaging dependency on link to the previous
-            parent">
+        <section title="Req#1: Remove messaging dependency on link to the previous parent">
             <t>
                 When the switching node sends the NPDAO message to the previous
                 parent, it is normal that the link to the previous parent is
@@ -551,7 +549,7 @@
                 receives the regular DAO, it finds that it already has a
                 routing table entry on behalf of the target address of node D.
                 It finds however that the next hop information for reaching
-                node D has changed i.e. node D has decided to change the
+                node D has changed i.e., node D has decided to change the
                 paths. In this case, Node A which is the common ancestor node
                 for node D along the two paths (previous and new), should generate
                 a DCO which traverses downwards in the network.
@@ -573,12 +571,12 @@
 
             <t>
                 This document specifies a change in the Transit Information Option to
-                contain the "Invalidate previous route" (I) bit. This I-bit signals
+                contain the "Invalidate previous route" (I) flag. This I-flag signals
                 the common ancestor node to generate a DCO on behalf of the
-                target node. The I-bit is carried in the Transit Information
+                target node. The I-flag is carried in the Transit Information
                 Option which augments the reachability information for a given
                 set of RPL Target(s). Transit Information Option should be
-                carried in the DAO message with I-bit set in case route
+                carried in the DAO message with I-flag set in case route
                 invalidation is sought for the corresponding target(s).
             </t>
             <t> <figure align="center" anchor="transit_info_with_i"
@@ -601,14 +599,14 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
                         ]]></artwork> </figure> </t>
             <t>
-                I (Invalidate previous route) bit: The 'I' flag is set by the
+                I (Invalidate previous route) flag: The 'I' flag is set by the
                 target node to indicate to the common ancestor node that it
                 wishes to invalidate any previous route between the two paths.
             </t>
             <t>
                 The common ancestor node SHOULD generate a DCO message in
-                response to this I-bit when it sees that the routing
-                adjacencies have changed for the target. I-bit governs the
+                response to this I-flag when it sees that the routing
+                adjacencies have changed for the target. I-flag governs the
                 ownership of the DCO message in a way that the target node is
                 still in control of its own route invalidation.
             </t>
@@ -696,7 +694,7 @@
 
             <section title="DCO Options">
                 <t>
-                    The DCO message MUST carry atleast one RPL Target and the
+                    The DCO message MUST carry at least one RPL Target and the
                     Transit Information Option and MAY carry other valid
                     options.  This specification allows for the DCO message to
                     carry the following options:
@@ -709,9 +707,7 @@
                     </list>
                     The DCO carries an RPL Target Option and an associated
                     Transit Information Option with a lifetime of 0x00000000 to
-                    indicate a loss of reachability to that Target. The
-                    lifetime indicated in the Transit Information Option of the
-                    DCO message MUST be set to 0x00000000.
+                    indicate a loss of reachability to that Target.
                 </t>
             </section>
             <section title="Path Sequence number in the DCO">
@@ -720,16 +716,14 @@
                     Information Option to identify the freshness of the DCO
                     message. The Path Sequence in the DCO MUST use the same
                     Path Sequence number present in the regular DAO message
-                    when the DCO is generated in response to a DAO message. The
-                    Path Sequence present in the Transit Information Option of
-                    the DAO and the correspondingly triggered DCO MUST be same.
+                    when the DCO is generated in response to a DAO message.
                     Thus if a DCO is received by a 6LR and subsequently a DAO
                     is received with an old seqeunce number, then the DAO
                     MUST be ignored.
                 </t>
             </section>
 
-            <section title="Destination Cleanup Option Acknowledgement (DCO-ACK)">
+            <section title="Destination Cleanup Option Acknowledgment (DCO-ACK)">
                 <t>
                     The DCO-ACK message SHOULD be sent as a unicast packet by a
                     DCO recipient in response to a unicast DCO message with 'K'
@@ -827,7 +821,7 @@
                     <t>
                         A node receiving a unicast DCO message MUST verify the
                         stored Path Sequence in context to the given target. If
-                        the stored Path Sequence is more fresh i.e. newer than
+                        the stored Path Sequence is more fresh i.e., newer than
                         the Path Sequence received in the DCO, then the DCO
                         MUST be dropped.
                     </t>
@@ -859,7 +853,7 @@
                     nodes will generate their respective DAOs to update their
                     paths, and the previous route invalidation for those nodes
                     should work in the similar manner described for switching
-                    node. The dependent node may set the I-bit in the Transit
+                    node. The dependent node may set the I-flag in the Transit
                     Information Option as part of regular DAO so as to
                     request invalidation of previous route from the common
                     ancestor node.
@@ -868,8 +862,8 @@
                     Dependent nodes do not have any indication regarding if any
                     of its parent nodes in turn have decided to switch their
                     parent. Thus for route invalidation the dependent nodes may
-                    choose to always set the 'I' bit in all its DAO message's
-                    Transit Information Option. Note that setting the I-bit is
+                    choose to always set the 'I' flag in all its DAO message's
+                    Transit Information Option. Note that setting the I-flag is
                     not counter productive even if there is no previous
                     route to be invalidated.
                 </t>
@@ -884,7 +878,7 @@
                     Moreover a deployment can have a mix of nodes
                     supporting the DCO and the existing NPDAO mechanism. It is
                     also possible that the same node supports both the NPDAO
-                    and DCO signalling.
+                    and DCO signaling.
                 </t>
                 <t>
                     Section 9.8 of <xref target="RFC6550"/> states, "When a
@@ -904,7 +898,7 @@
                         </t>
                         <t>
                             Send regular DAO on the new path with the 'I'
-                            bit set in the Transit Information Option such
+                            flag set in the Transit Information Option such
                             that the common ancestor node initiates the DCO
                             message downstream to invalidate the previous
                             route.
@@ -963,7 +957,7 @@
         </section>
     </section>
 
-    <section anchor="Acknowledgements" title="Acknowledgements">
+    <section anchor="Acknowledgments" title="Acknowledgments">
         <t>
             Many thanks to Alvaro Retana, Cenk Gundogan, Simon Duquennoy, Georgios
             Papadopoulous, Peter Van Der Stok for their review and comments.
@@ -989,19 +983,19 @@
             <c>Destination Cleanup Object</c>
             <c>This document</c>
             <c>TBD2</c>
-            <c>Destination Cleanup Object Acknowledgement</c>
+            <c>Destination Cleanup Object Acknowledgment</c>
             <c>This document</c>
             <c>TBD3</c>
             <c>Secure Destination Cleanup Object</c>
             <c>This document</c>
             <c>TBD4</c>
-            <c>Secure Destination Cleanup Object Acknowledgement</c>
+            <c>Secure Destination Cleanup Object Acknowledgment</c>
             <c>This document</c>
         </texttable>
 
         <t>
             IANA is requested to allocate bit 1 from the Transit Information
-            Option Flags registry for the I-bit (<xref target="transit_opt_changes"/>)
+            Option Flags registry for the I-flag (<xref target="transit_opt_changes"/>)
         </t>
         <section title="New Registry for the Destination Cleanup Object (DCO) Flags">
             <t>
@@ -1013,7 +1007,7 @@
                 bit is tracked with the following qualities:
             </t>
             <t>
-                <list style="format o">
+                <list style="format o ">
                     <t>Bit number (counting from bit 0 as the most significant bit)</t>
                     <t>Capability description</t>
                     <t>Defining RFC</t>
@@ -1035,18 +1029,17 @@
                 <c>This document</c>
             </texttable>
         </section>
-        <section title="New Registry for the Destination Cleanup Object
-            Acknowledgement (DCO-ACK) Status field">
+        <section title="New Registry for the Destination Cleanup Object Acknowledgment (DCO-ACK) Status field">
             <t>
                 IANA has created a registry for the 8-bit Destination Cleanup
-                Object Acknowledgement (DCO-ACK) Status field.
+                Object Acknowledgment (DCO-ACK) Status field.
             </t>
             <t>
                 New Status values may be allocated only by an IETF Review.  Each
                 value is tracked with the following qualities:
             </t>
             <t>
-                <list style="format o">
+                <list style="format o ">
                     <t>Status Code</t>
                     <t>Description</t>
                     <t>Defining RFC</t>
@@ -1068,17 +1061,17 @@
             </texttable>
         </section>
         <section title="New Registry for the Destination Cleanup Object (DCO)
-        Acknowledgement Flags">
+        Acknowledgment Flags">
             <t>
                 IANA has created a registry for the 8-bit Destination Cleanup
-                Object (DCO) Acknowledgement Flags field.
+                Object (DCO) Acknowledgment Flags field.
             </t>
             <t>
                 New bit numbers may be allocated only by an IETF Review.  Each
                 bit is tracked with the following qualities:
             </t>
             <t>
-                <list style="format o">
+                <list style="format o ">
                     <t>Bit number (counting from bit 0 as the most significant bit)</t>
                     <t>Capability description</t>
                     <t>Defining RFC</t>
@@ -1103,10 +1096,10 @@
             This document introduces the ability for a common ancestor node to
             invalidate a route on behalf of the target node. The common
             ancestor node is directed to do so by the target node using the 'I'
-            bit in DCO's Transit Information Option. However, the common
+            flag in DCO's Transit Information Option. However, the common
             ancestor node is in a position to unilaterally initiate the route
-            invalidation since it possesses all the required state information
-            namely, the Target address and the correspond Path Sequence. Thus a
+            invalidation since it possesses all the required state information,
+            namely, the Target address and the corresponding Path Sequence. Thus a
             rogue common ancestor node could initiate such an invalidation and
             impact the traffic to the target node. This document assumes that
             the security mechanisms as defined in <xref target="RFC6550"/> are
@@ -1133,11 +1126,9 @@
                     Unsecured: In this mode, it is expected that the RPL control messages
                     are secured by other security mechanisms, such as
                     link-layer security. In this mode, the RPL control messages,
-                    including DCO, DCO-ACK, do not have Security sections. A
-                    DCO and DCO-ACK message which is not encrypted at
-                    link-layer MUST not be handled by the RPL layer. Also all
-                    the DCO and DCO-ACK messages that are transmitted MUST be
-                    link-layer encrypted.
+                    including DCO, DCO-ACK, do not have Security sections.
+                    Also note that unsecured mode does not imply that all
+                    messages are sent without any protection.
                 </t>
                 <t>
                     Preinstalled: In this mode, RPL uses secure messages. Thus
@@ -1185,7 +1176,7 @@
             parameter specifies the address of the target node. The parameter
             'pathseq', which specifies the Path Sequence value carried in the
             Transit Information Option. The parameter 'I_flag' specifies the
-            'I' bit in the Transit Information Option.
+            'I' flag in the Transit Information Option.
             sequence of actions is as follows:
             <list style="numbers">
                 <t>Node D switches its parent from node B to node C</t>
@@ -1207,7 +1198,7 @@
                     Node A receives the DAO(tgt=D,pathseq=x+1,I_flag=1), and
                     checks for a routing entry on behalf of D. It finds a
                     routing entry but checks that the next hop for target D is
-                    different (i.e. Node G). Node A checks the I_flag and
+                    different (i.e., Node G). Node A checks the I_flag and
                     generates DCO(tgt=D,pathseq=x+1) to previous next hop for
                     target D which is G. Subsequently, Node A updates the
                     routing entry and forwards the reachability information of
