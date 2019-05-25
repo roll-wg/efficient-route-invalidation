@@ -587,21 +587,20 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |   Type = 0x06 | Option Length |E|I|  Flags    | Path Control  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-| Path Sequence | Path Lifetime |                               |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+                               +
-|                                                               |
-+                                                               +
-|                                                               |
-+                        Parent Address                         +
-|                                                               |
-+                               +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                               |
+| Path Sequence | Path Lifetime |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
                         ]]></artwork> </figure> </t>
             <t>
                 I (Invalidate previous route) flag: The 'I' flag is set by the
                 target node to indicate to the common ancestor node that it
                 wishes to invalidate any previous route between the two paths.
+            </t>
+            <t>
+                <xref target="RFC6550"/> allows parent address to be sent in
+                the Transit Information Option depending on the mode of
+                operation. In case of storing mode of operation the field is
+                usually not needed. In case of DCO, the parent address field
+                MUST not be included.
             </t>
             <t>
                 The common ancestor node SHOULD generate a DCO message in
@@ -844,6 +843,36 @@
             </t>
         </section>
 
+        <section title="Unsolicited DCO">
+            <t>
+                A 6LR may generate an unsolicited DCO to unilaterally cleanup
+                the path on behalf of the target entry. The 6LR has all the
+                state information namely, the Target address and the Path
+                Sequence, required for generating DCO in its routing table.
+                The conditions why 6LR may generate an unsolicited DCO is
+                beyond the scope of this document but some possible reasons
+                could be:
+                <list style="numbers">
+                    <t>
+                        On route expiry of an entry, a 6LR may decide to
+                        gracious cleanup the entry by initiating DCO.
+                    </t>
+                    <t>
+                        6LR needs to entertain higher priority entries in case
+                        the routing table is full thus resulting in an eviction
+                        of existing routing entry. In this case the eviction
+                        can be handled graciously using DCO.
+                    </t>
+                </list>
+            </t>
+            <t>
+                Note that if the 6LR initiates a unilateral path cleanup using
+                DCO and if it has the latest state for the target then the DCO
+                would finally reach the target node. Thus the target node would
+                be informed of its invalidation.
+            </t>
+        </section>
+
         <section title="Other considerations">
             <section title="Dependent Nodes invalidation">
                 <t>
@@ -999,8 +1028,10 @@
         </t>
         <section title="New Registry for the Destination Cleanup Object (DCO) Flags">
             <t>
-                IANA has created a registry for the 8-bit Destination Cleanup
-                Object (DCO) Flags field.
+                IANA is requested to create a registry for the 8-bit Destination Cleanup
+                Object (DCO) Flags field. This registry should be located in
+                existing category of "Routing Protocol for Low Power and Lossy
+                Networks (RPL)".
             </t>
             <t>
                 New bit numbers may be allocated only by an IETF Review.  Each
@@ -1031,8 +1062,10 @@
         </section>
         <section title="New Registry for the Destination Cleanup Object Acknowledgment (DCO-ACK) Status field">
             <t>
-                IANA has created a registry for the 8-bit Destination Cleanup
-                Object Acknowledgment (DCO-ACK) Status field.
+                IANA is requested to create a registry for the 8-bit Destination Cleanup
+                Object Acknowledgment (DCO-ACK) Status field. This registry
+                should be located in existing category of "Routing Protocol for
+                Low Power and Lossy Networks (RPL)".
             </t>
             <t>
                 New Status values may be allocated only by an IETF Review.  Each
@@ -1063,8 +1096,10 @@
         <section title="New Registry for the Destination Cleanup Object (DCO)
         Acknowledgment Flags">
             <t>
-                IANA has created a registry for the 8-bit Destination Cleanup
-                Object (DCO) Acknowledgment Flags field.
+                IANA is requested to create a registry for the 8-bit
+                Destination Cleanup Object (DCO) Acknowledgment Flags field.
+                This registry should be located in existing category of
+                "Routing Protocol for Low Power and Lossy Networks (RPL)".
             </t>
             <t>
                 New bit numbers may be allocated only by an IETF Review.  Each
@@ -1101,10 +1136,25 @@
             invalidation since it possesses all the required state information,
             namely, the Target address and the corresponding Path Sequence. Thus a
             rogue common ancestor node could initiate such an invalidation and
-            impact the traffic to the target node. This document assumes that
-            the security mechanisms as defined in <xref target="RFC6550"/> are
-            followed, which means that the common ancestor node is part of the
-            RPL network because it has the required credentials.
+            impact the traffic to the target node.
+        </t>
+        <t>
+            This document also introduces an I-flag which is set by the target
+            node and used by the ancestor node to initiate a DCO if the
+            ancestor nodes sees an update in the route adjacency. However,
+            this flag could be spoofed by a malicious 6LR in the path and can
+            cause invalidation of an existing active path. Note that invalidation
+            will happen only if the other conditions such as Path Sequence
+            condition is also met. Having said that a malicious 6LR may
+            spoof a DAO on behalf of the (sub) child with the I-flag set and
+            can cause route invalidation on behalf of the (sub) child node.
+        </t>
+        <t>
+            This document assumes that the security mechanisms as defined in
+            <xref target="RFC6550"/> are followed, which means that the common
+            ancestor node and all the 6LRs are part of the RPL network because
+            they have the required credentials. A non-secure RPL network needs
+            to take into consideration the risks highlighted in this section.
         </t>
         <t>
             All RPL messages support a secure version of messages which allows
