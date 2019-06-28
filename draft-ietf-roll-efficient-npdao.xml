@@ -134,7 +134,7 @@
       <t>
         This document explains the problems associated with the current use of
         NPDAO messaging and also discusses the requirements for an optimized
-        route invalidation messaging scheme. Further a new pro-active route
+        route invalidation messaging scheme. Further a new proactive route
         invalidation message called as "Destination Cleanup Object" (DCO) is
         specified which fulfills requirements of an optimized route
         invalidation messaging.
@@ -163,7 +163,7 @@
             flows upstream towards the 6LBR. This document explains the
             problems associated with the current use of NPDAO messaging and
             also discusses the requirements for an optimized route invalidation
-            messaging scheme. Further a new pro-active route invalidation
+            messaging scheme. Further a new proactive route invalidation
             message called as "Destination Cleanup Object" (DCO) is specified
             which fulfills requirements of an optimized route invalidation
             messaging.
@@ -195,6 +195,14 @@
 
             <t>
                 <list style="hanging">
+                    <t hangText="Low Power and Lossy Networks (LLN):"> <vspace />
+                        Network in which both the routers and their
+                        interconnect are constrained. LLN routers typically
+                        operate with constraints on processing power, memory,
+                        and energy (batter power). Their interconnects are
+                        characterized by high loss rates, low data rates, and
+                        instability.
+                    </t>
                     <t hangText="6LoWPAN Router (6LR):"> <vspace />
                         An intermediate router that is able to send and receive Router
                         Advertisements (RAs) and Router Solicitations (RSs) as well as
@@ -234,7 +242,7 @@
                     </t>
 
                     <t hangText="Destination Cleanup Object (DCO):"> <vspace />
-                        A new RPL control message type defined by this
+                        A new RPL control message code defined by this
                         document. DCO messaging improves proactive route
                         invalidation in RPL.
                     </t>
@@ -521,7 +529,7 @@
                 originates at the node changing to a new parent and traverses
                 upstream towards the root. In order to solve the problems as
                 mentioned in <xref target="current_npdao_problems"/>, the
-                document adds a new pro-active route invalidation message
+                document adds a new proactive route invalidation message
                 called "Destination Cleanup Object" (DCO) that originates at a
                 common ancestor node and flows downstream between the new and
                 old path. The common ancestor node generates a DCO in response
@@ -676,9 +684,9 @@
                 zero by the sender and MUST be ignored by the receiver.
             </t>
             <t>
-                DCOSequence: Incremented at each unique DCO message from a node
-                and echoed in the DCO-ACK message. The initial DCOSequence can
-                be chosen randomly by the node.
+                DCOSequence: 8-bit field incremented at each unique DCO message
+                from a node and echoed in the DCO-ACK message. The initial
+                DCOSequence can be chosen randomly by the node.
             </t>
             <t>
                 DODAGID (optional): 128-bit unsigned integer set by a DODAG
@@ -725,7 +733,9 @@
                     when the DCO is generated in response to a DAO message.
                     Thus if a DCO is received by a 6LR and subsequently a DAO
                     is received with an old seqeunce number, then the DAO
-                    MUST be ignored.
+                    MUST be ignored. When the DCO is generated in response to a
+                    DCO from upstream parent, the Path Sequence MUST be copied
+                    from the received DCO.
                 </t>
             </section>
 
