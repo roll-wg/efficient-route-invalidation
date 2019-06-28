@@ -652,14 +652,15 @@
                 expected to send a DCO-ACK back. If the DCO-ACK is not received
                 even after setting the 'K' flag, an implementation may retry
                 the DCO at a later time. The number of retries are
-                implementation and deployment dependent. A node receiving a DCO
-                message without the 'K' flag set MAY respond with a DCO-ACK,
-                especially to report an error condition. An example error
-                condition could be that the node sending the DCO-ACK does not
-                find the routing entry for the indicated target. When the
-                sender does not set the 'K' flag it is an indication that the
-                sender does not expect a response, and the sender SHOULD NOT
-                retry the DCO.
+                implementation and deployment dependent and are expected to be
+                kept similar with those used in DAO retries in <xref
+                    target="RFC6550"/>. A node receiving a DCO message without
+                the 'K' flag set MAY respond with a DCO-ACK, especially to
+                report an error condition. An example error condition could be
+                that the node sending the DCO-ACK does not find the routing
+                entry for the indicated target. When the sender does not set
+                the 'K' flag it is an indication that the sender does not
+                expect a response, and the sender SHOULD NOT retry the DCO.
             </t>
             <t>
                 D: The 'D' flag indicates that the DODAGID field is present.
