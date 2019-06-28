@@ -35,7 +35,7 @@
 <?rfc subcompact="yes" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-roll-efficient-npdao-11" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-roll-efficient-npdao-13" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN"
@@ -109,7 +109,7 @@
          in the current day for you. If only the current year is specified, xml2rfc will fill
      in the current day and month for you. If the year is not the current one, it is
      necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the
-     purpose of calculating the expiry date).  With drafts it is normally sufficient to
+     purpose of calculating the expiry date). With drafts it is normally sufficient to
      specify just the year. -->
 
     <!-- Meta-data Declarations -->
@@ -132,10 +132,12 @@
 
     <abstract>
       <t>
-        This document describes the problems associated with No-Path
-        Destination Advertisement Object (NPDAO) messaging used in Routing
-        Protocol for Low power and lossy networks (RPL) for route invalidation
-        and signaling changes to improve route invalidation efficiency.
+        This document explains the problems associated with the current use of
+        NPDAO messaging and also discusses the requirements for an optimized
+        route invalidation messaging scheme. Further a new pro-active route
+        invalidation message called as "Destination Cleanup Object" (DCO) is
+        specified which fulfills requirements of an optimized route
+        invalidation messaging.
       </t>
     </abstract>
   </front>
@@ -145,7 +147,7 @@
         <t>
             RPL <xref target="RFC6550"/> (Routing Protocol for Low power and
             lossy networks) specifies a proactive distance-vector based routing
-            scheme. RPL has an optional messaging in the form of DAO
+            scheme. RPL has optional messaging in the form of DAO
             (Destination Advertisement Object) messages, which the 6LBR (6Lo
             Border Router) and 6LR (6Lo Router) can use to learn a route
             towards the downstream nodes. In storing mode, DAO messages would
@@ -156,7 +158,7 @@
         <t>
             RPL allows the use of No-Path DAO (NPDAO) messaging to invalidate a
             routing path corresponding to the given target, thus releasing
-            resources utilized on that path.  A NPDAO is a DAO message with
+            resources utilized on that path. A NPDAO is a DAO message with
             route lifetime of zero, originates at the target node and always
             flows upstream towards the 6LBR. This document explains the
             problems associated with the current use of NPDAO messaging and
@@ -254,9 +256,9 @@
         <section anchor="current_npdao" title="Current NPDAO messaging">
             <t>
                 RPL uses NPDAO messaging in the storing mode so that the node
-                changing it routing adjacencies can invalidate the previous
+                changing its routing adjacencies can invalidate the previous
                 route. This is needed so that nodes along the previous path can
-                release any resources (such as the routing entry) it maintains
+                release any resources (such as the routing entry) they maintain
                 on behalf of target node.
             </t>
 
@@ -320,13 +322,13 @@
         </section>
         -->
 
-        <section title="Why NPDAO is important?">
+        <section title="Why Is NPDAO Important?">
             <t>
                 Nodes in LLNs may be resource constrained. There is limited
                 memory available and routing entry records are one of the
                 primary elements occupying dynamic memory in the nodes. Route
                 invalidation helps 6LR nodes to decide which entries could be
-                discarded to better achieve resource utilization.  Thus it
+                discarded to better optimize resource utilization. Thus it
                 becomes necessary to have an efficient route invalidation
                 mechanism. Also note that a single parent switch may result in
                 a "sub-tree" switching from one parent to another. Thus the
@@ -360,7 +362,7 @@
             -->
         </section>
 
-        <section title="Invalidate routes of dependent nodes">
+        <section title="Invalidate Routes of Dependent Nodes">
             <t>
                 RPL does not specify how route invalidation will work for
                 dependent nodes rooted at the switching node, resulting in
@@ -600,7 +602,7 @@
                 the Transit Information Option depending on the mode of
                 operation. In case of storing mode of operation the field is
                 usually not needed. In case of DCO, the parent address field
-                MUST not be included.
+                MUST NOT be included.
             </t>
             <t>
                 The common ancestor node SHOULD generate a DCO message in
@@ -654,7 +656,10 @@
                 message without the 'K' flag set MAY respond with a DCO-ACK,
                 especially to report an error condition. An example error
                 condition could be that the node sending the DCO-ACK does not
-                find the routing entry for the indicated target.
+                find the routing entry for the indicated target. When the
+                sender does not set the 'K' flag it is an indication that the
+                sender does not expect a response, and the sender SHOULD NOT
+                retry the DCO.
             </t>
             <t>
                 D: The 'D' flag indicates that the DODAGID field is present.
@@ -662,7 +667,7 @@
             </t>
             <t>
                 Flags: The 6 bits remaining unused in the Flags field are
-                reserved for future use.  These bits MUST be initialized to zero by
+                reserved for future use. These bits MUST be initialized to zero by
                 the sender and MUST be ignored by the receiver.
             </t>
             <t>
@@ -676,10 +681,11 @@
             </t>
             <t>
                 DODAGID (optional): 128-bit unsigned integer set by a DODAG
-                root that uniquely identifies a DODAG.  This field MUST be
-                present when the 'D' flag is set.  DODAGID is used when a local
-                RPLInstanceID is in use, in order to identify the DODAGID that
-                is associated with the RPLInstanceID.
+                root that uniquely identifies a DODAG. This field MUST be
+                present when the 'D' flag is set and MUST NOT be present if 'D'
+                flag is not set. DODAGID is used when a local RPLInstanceID is
+                in use, in order to identify the DODAGID that is associated
+                with the RPLInstanceID.
             </t>
 
             <section title="Secure DCO">
@@ -695,7 +701,7 @@
                 <t>
                     The DCO message MUST carry at least one RPL Target and the
                     Transit Information Option and MAY carry other valid
-                    options.  This specification allows for the DCO message to
+                    options. This specification allows for the DCO message to
                     carry the following options:
                     <list>
                         <t>0x00 Pad1</t>
@@ -727,7 +733,7 @@
                     The DCO-ACK message SHOULD be sent as a unicast packet by a
                     DCO recipient in response to a unicast DCO message with 'K'
                     flag set. If 'K' flag is not set then the receiver of the
-                    DCO message MAY send a DCO-ACK to signal an error
+                    DCO message MAY send a DCO-ACK, especially to report an error
                     condition.
                 </t>
                 <t> <figure align="center" anchor="dco_ack" title="DCO-ACK base
@@ -756,7 +762,7 @@
                     This flag MUST be set when a local RPLInstanceID is used.
                 </t>
                 <t>
-                    Reserved: 7-bit unused field.  The field MUST be initialized to
+                    Reserved: 7-bit unused field. The field MUST be initialized to
                     zero by the sender and MUST be ignored by the receiver.
                 </t>
                 <t>
@@ -764,17 +770,18 @@
                     DCOSequence received in the DCO message.
                 </t>
                 <t>
-                    Status: Indicates the completion.  Status 0 is defined as
+                    Status: Indicates the completion. Status 0 is defined as
                     unqualified acceptance in this specification. Status 1 is
                     defined as "No routing-entry for the Target found". The
                     remaining status values are reserved as rejection codes.
                 </t>
                 <t>
                     DODAGID (optional): 128-bit unsigned integer set by a DODAG
-                    root that uniquely identifies a DODAG.  This field MUST be
-                    present when the 'D' flag is set.  DODAGID is used when a local
-                    RPLInstanceID is in use, in order to identify the DODAGID that
-                    is associated with the RPLInstanceID.
+                    root that uniquely identifies a DODAG. This field MUST be
+                    present when the 'D' flag is set and MUST NOT be present
+                    when 'D' flag is not set. DODAGID is used when a local
+                    RPLInstanceID is in use, in order to identify the DODAGID
+                    that is associated with the RPLInstanceID.
                 </t>
             </section>
 
@@ -820,7 +827,7 @@
                     <t>
                         A node receiving a unicast DCO message MUST verify the
                         stored Path Sequence in context to the given target. If
-                        the stored Path Sequence is more fresh i.e., newer than
+                        the stored Path Sequence is more fresh, newer than
                         the Path Sequence received in the DCO, then the DCO
                         MUST be dropped.
                     </t>
@@ -849,18 +856,18 @@
                 the path on behalf of the target entry. The 6LR has all the
                 state information namely, the Target address and the Path
                 Sequence, required for generating DCO in its routing table.
-                The conditions why 6LR may generate an unsolicited DCO is
+                The conditions why 6LR may generate an unsolicited DCO are
                 beyond the scope of this document but some possible reasons
                 could be:
                 <list style="numbers">
                     <t>
                         On route expiry of an entry, a 6LR may decide to
-                        gracious cleanup the entry by initiating DCO.
+                        graciously cleanup the entry by initiating DCO.
                     </t>
                     <t>
                         6LR needs to entertain higher priority entries in case
-                        the routing table is full thus resulting in an eviction
-                        of existing routing entry. In this case the eviction
+                        the routing table is full, thus resulting in eviction
+                        of an existing routing entry. In this case the eviction
                         can be handled graciously using DCO.
                     </t>
                 </list>
@@ -889,11 +896,11 @@
                 </t>
                 <t>
                     Dependent nodes do not have any indication regarding if any
-                    of its parent nodes in turn have decided to switch their
+                    of their parents in turn have decided to switch their
                     parent. Thus for route invalidation the dependent nodes may
                     choose to always set the 'I' flag in all its DAO message's
                     Transit Information Option. Note that setting the I-flag is
-                    not counter productive even if there is no previous
+                    not counterproductive even if there is no previous
                     route to be invalidated.
                 </t>
             </section>
@@ -904,7 +911,7 @@
                     for example, when the route lifetime expiry of the target
                     happens or when the node simply decides to gracefully
                     terminate the RPL session on graceful node shutdown.
-                    Moreover a deployment can have a mix of nodes
+                    Moreover, a deployment can have a mix of nodes
                     supporting the DCO and the existing NPDAO mechanism. It is
                     also possible that the same node supports both the NPDAO
                     and DCO signaling.
@@ -914,7 +921,7 @@
                     node removes a node from its DAO parent set, it SHOULD
                     send a No-Path DAO message to that removed DAO parent to
                     invalidate the existing router". This document introduces
-                    an alternate and more optimized way of route invalidation
+                    an alternative and more optimized way of route invalidation
                     but it also allows existing NPDAO messaging to work. Thus
                     an implementation has two choices to make when a route
                     invalidation is to be initiated:
@@ -943,7 +950,7 @@
             <section title="DCO with multiple preferred parents">
                 <t>
                     <xref target="RFC6550"/> allows a node to select multiple
-                    preferred parents for route establishment.  Section 9.2.1
+                    preferred parents for route establishment. Section 9.2.1
                     of <xref target="RFC6550"/> specifies, "All DAOs generated
                     at the same time for the same Target MUST be sent with the
                     same Path Sequence in the Transit Information".
@@ -964,19 +971,19 @@
                     possible next-hops. This will help to reduce DCO control
                     overhead i.e., the common ancestor can wait for updated
                     DAOs from all possible directions before initiating a DCO
-                    for route invalidation.  After timeout, the DCO needs to be
+                    for route invalidation. After timeout, the DCO needs to be
                     generated for all the next-hops for whom the route
                     invalidation needs to be done.
                 </t>
                 <t>
-                    This documents recommends using a DelayDCO timer value of
-                    1sec.  This value is inspired by the default DelayDAO value
+                    This document recommends using a DelayDCO timer value of
+                    1sec. This value is inspired by the default DelayDAO value
                     of 1sec in <xref target="RFC6550"/>. Here the hypothesis is
-                    that the DAOs from all possible parent set would be
+                    that the DAOs from all possible parent sets would be
                     received on the common ancestor within this time period.
                 </t>
                 <t>
-                    Note that there is no requirement of synchronization
+                    Note that there is no requirement for synchronization
                     between DCO and DAOs. The DelayDCO timer simply ensures
                     that the DCO control overhead can be reduced and is only
                     needed when the network contains nodes using multiple
@@ -1034,7 +1041,7 @@
                 Networks (RPL)".
             </t>
             <t>
-                New bit numbers may be allocated only by an IETF Review.  Each
+                New bit numbers may be allocated only by an IETF Review. Each
                 bit is tracked with the following qualities:
             </t>
             <t>
@@ -1068,7 +1075,7 @@
                 Low Power and Lossy Networks (RPL)".
             </t>
             <t>
-                New Status values may be allocated only by an IETF Review.  Each
+                New Status values may be allocated only by an IETF Review. Each
                 value is tracked with the following qualities:
             </t>
             <t>
@@ -1102,7 +1109,7 @@
                 "Routing Protocol for Low Power and Lossy Networks (RPL)".
             </t>
             <t>
-                New bit numbers may be allocated only by an IETF Review.  Each
+                New bit numbers may be allocated only by an IETF Review. Each
                 bit is tracked with the following qualities:
             </t>
             <t>
@@ -1141,11 +1148,11 @@
         <t>
             This document also introduces an I-flag which is set by the target
             node and used by the ancestor node to initiate a DCO if the
-            ancestor nodes sees an update in the route adjacency. However,
+            ancestor sees an update in the route adjacency. However,
             this flag could be spoofed by a malicious 6LR in the path and can
             cause invalidation of an existing active path. Note that invalidation
             will happen only if the other conditions such as Path Sequence
-            condition is also met. Having said that a malicious 6LR may
+            condition is also met. Having said that, a malicious 6LR may
             spoof a DAO on behalf of the (sub) child with the I-flag set and
             can cause route invalidation on behalf of the (sub) child node.
         </t>
@@ -1165,7 +1172,7 @@
         <t>
             The document adds new messages (DCO, DCO-ACK) which are
             syntactically similar to existing RPL messages such as DAO,
-            DAO-ACK.  Secure versions of DCO and DCO-ACK are added similar to
+            DAO-ACK. Secure versions of DCO and DCO-ACK are added similar to
             other RPL messages (such as DAO, DAO-ACK).
         </t>
         <t>
@@ -1204,7 +1211,7 @@
      Both are cited textually in the same manner: by using xref elements.
      If you use the PI option, xml2rfc will, by default, try to find included files in the same
      directory as the including file. You can also define the XML_LIBRARY environment variable
-     with a value containing a set of directories to search.  These can be either in the local
+     with a value containing a set of directories to search. These can be either in the local
      filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
     <references title="Normative References">
