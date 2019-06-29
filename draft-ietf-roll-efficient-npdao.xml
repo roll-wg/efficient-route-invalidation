@@ -550,10 +550,10 @@
             <t>
                 In <xref target="sample_top"/>, when node D decides to
                 switch the path from B to C, it sends a regular DAO to node C
-                with reachability information containing target as address of D
-                and an incremented Path Sequence. Node C will update the
-                routing table based on the reachability information in the DAO and
-                in turn generate another DAO with the same reachability
+                with reachability information containing the address of D as
+                the target and an incremented Path Sequence. Node C will update
+                the routing table based on the reachability information in the
+                DAO and in turn generate another DAO with the same reachability
                 information and forward it to H. Node H also follows the same
                 procedure as Node C and forwards it to node A. When node A
                 receives the regular DAO, it finds that it already has a
@@ -561,8 +561,8 @@
                 It finds however that the next hop information for reaching
                 node D has changed i.e., node D has decided to change the
                 paths. In this case, Node A which is the common ancestor node
-                for node D along the two paths (previous and new), should generate
-                a DCO which traverses downwards in the network.
+                for node D along the two paths (previous and new), should
+                generate a DCO which traverses downwards in the network.
             </t>
 
         </section>
