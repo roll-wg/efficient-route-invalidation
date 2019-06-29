@@ -1097,7 +1097,7 @@
                 </list>
             </t>
             <t>
-                The following bits are currently defined:
+                The following values are currently defined:
             </t>
             <texttable title="DCO Status Codes">
                 <ttcol align='center'>Status Code</ttcol>
