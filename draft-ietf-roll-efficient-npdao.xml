@@ -388,7 +388,7 @@
             </t>
         </section>
 
-        <section title="Possible route downtime caused by async operation of
+        <section title="Possible route downtime caused by asynchronous operation of
             NPDAO and DAO">
             <t>
                 A switching node may generate both an NPDAO and DAO via two
@@ -606,7 +606,7 @@
                 wishes to invalidate any previous route between the two paths.
             </t>
             <t>
-                <xref target="RFC6550"/> allows parent address to be sent in
+                <xref target="RFC6550"/> allows the parent address to be sent in
                 the Transit Information Option depending on the mode of
                 operation. In case of storing mode of operation the field is
                 usually not needed. In case of DCO, the parent address field
@@ -719,9 +719,11 @@
                         <t>0x06 Transit Information</t>
                         <t>0x09 RPL Target Descriptor</t>
                     </list>
-                    The DCO carries an RPL Target Option and an associated
-                    Transit Information Option with a lifetime of 0x00000000 to
-                    indicate a loss of reachability to that Target.
+                    Section 6.7 of <xref target="RFC6550"/> defines all the
+                    above mentioned options.  The DCO carries an RPL Target
+                    Option and an associated Transit Information Option with a
+                    lifetime of 0x00000000 to indicate a loss of reachability
+                    to that Target.
                 </t>
             </section>
             <section title="Path Sequence number in the DCO">
@@ -732,7 +734,7 @@
                     Path Sequence number present in the regular DAO message
                     when the DCO is generated in response to a DAO message.
                     Thus if a DCO is received by a 6LR and subsequently a DAO
-                    is received with an old seqeunce number, then the DAO
+                    is received with an old sequence number, then the DAO
                     MUST be ignored. When the DCO is generated in response to a
                     DCO from upstream parent, the Path Sequence MUST be copied
                     from the received DCO.
@@ -777,8 +779,8 @@
                     zero by the sender and MUST be ignored by the receiver.
                 </t>
                 <t>
-                    DCOSequence: The DCOSequence in DCO-ACK is copied from the
-                    DCOSequence received in the DCO message.
+                    DCOSequence: 8-bit field. The DCOSequence in DCO-ACK is
+                    copied from the DCOSequence received in the DCO message.
                 </t>
                 <t>
                     Status: Indicates the completion. Status 0 is defined as
@@ -815,7 +817,9 @@
                         MUST increment the DCOSequence field by at least one.
                         A DCO message transmission that is identical to the
                         prior DCO message transmission MAY increment the
-                        DCOSequence field.
+                        DCOSequence field. The DCOSequence counter follows the
+                        sequence counter operation as defined in Section 7.2 of
+                        <xref target="RFC6550"/>.
                     </t>
                     <t>
                         The RPLInstanceID and DODAGID fields of a DCO message
