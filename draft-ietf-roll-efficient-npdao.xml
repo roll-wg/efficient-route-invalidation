@@ -35,7 +35,7 @@
 <?rfc subcompact="yes" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-roll-efficient-npdao-14" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-roll-efficient-npdao-15" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN"
@@ -617,7 +617,7 @@
             <t>
                 The common ancestor node SHOULD generate a DCO message in
                 response to this I-flag when it sees that the routing
-                adjacencies have changed for the target.  The I-flag is
+                adjacencies have changed for the target. The I-flag is
                 intended to give the target node control over its own route
                 invalidation, serving as a signal to request DCO generation.
             </t>
@@ -724,7 +724,7 @@
                         <t>0x09 RPL Target Descriptor</t>
                     </list>
                     Section 6.7 of <xref target="RFC6550"/> defines all the
-                    above mentioned options.  The DCO carries an RPL Target
+                    above mentioned options. The DCO carries an RPL Target
                     Option and an associated Transit Information Option with a
                     lifetime of 0x00000000 to indicate a loss of reachability
                     to that Target.
@@ -965,6 +965,22 @@
                     This document recommends using option 2 for reasons
                     specified in <xref target="requirements"/> in this
                     document.
+                </t>
+                <t>
+                    This document assumes that all the 6LRs in the network
+                    support this specification. If there are 6LRs en-route DCO
+                    message path which do not support this document, then the
+                    route invalidation for corresponding targets may not work
+                    or may work partially i.e., only part of the path
+                    supporting DCO may be invalidated. Alternatively, a node
+                    could generate an NPDAO if it does not receive a DCO with
+                    itself as target within specified time limit. The specified
+                    time limit is deployment specific and depends upon the
+                    maximum depth of the network and per hop average latency.
+                    Note that sending NPDAO and DCO for the same operation
+                    would not result in unwanted side-effects because the
+                    acceptability of NPDAO or DCO depends upon the Path
+                    Sequence freshness.
                 </t>
             </section>
             <section title="DCO with multiple preferred parents">
