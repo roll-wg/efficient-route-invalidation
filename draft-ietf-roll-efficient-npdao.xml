@@ -388,8 +388,7 @@
             </t>
         </section>
 
-        <section title="Possible route downtime caused by asynchronous operation of
-            NPDAO and DAO">
+        <section title="Possible route downtime caused by asynchronous operation of NPDAO and DAO">
             <t>
                 A switching node may generate both an NPDAO and DAO via two
                 different paths at almost the same time. There is a possibility
@@ -664,13 +663,15 @@
                 the DCO at a later time. The number of retries are
                 implementation and deployment dependent and are expected to be
                 kept similar with those used in DAO retries in <xref
-                    target="RFC6550"/>. A node receiving a DCO message without
-                the 'K' flag set MAY respond with a DCO-ACK, especially to
-                report an error condition. An example error condition could be
-                that the node sending the DCO-ACK does not find the routing
-                entry for the indicated target. When the sender does not set
-                the 'K' flag it is an indication that the sender does not
-                expect a response, and the sender SHOULD NOT retry the DCO.
+                    target="RFC6550"/>. <xref target="dco_retry"/> specifies
+                the considerations for DCO retry. A node receiving a DCO
+                message without the 'K' flag set MAY respond with a DCO-ACK,
+                especially to report an error condition. An example error
+                condition could be that the node sending the DCO-ACK does not
+                find the routing entry for the indicated target. When the
+                sender does not set the 'K' flag it is an indication that the
+                sender does not expect a response, and the sender SHOULD NOT
+                retry the DCO.
             </t>
             <t>
                 D: The 'D' flag indicates that the DODAGID field is present.
@@ -983,6 +984,30 @@
                     Sequence freshness.
                 </t>
             </section>
+            <section title="Considerations for DCO retry" anchor="dco_retry">
+                <t>
+                    A DCO message could be retried by a sender if it sets the
+                    'K' flag and does not receive a DCO-ACK. The DCO retry time
+                    could be dependent on the maximum depth of the network and
+                    average per hop latency. This could range from 2 seconds to
+                    120 seconds depending on the deployment. In case the
+                    latency limits are not known, an implementation MUST NOT
+                    retry more than once in 3 seconds and MUST NOT retry more
+                    than 3 times.
+                </t>
+                <t>
+                    The number of retries could also be set depending on how
+                    critical the route invalidation could be for the deployment
+                    and the link layer retry configuration. For networks
+                    supporting only MP2P and P2MP flows, such as in AMI and
+                    telemetry applications, the 6LRs may not be very keen to
+                    invalidate routes, unless they are highly
+                    memory-constrained. For home and building automation
+                    networks which may have substantial P2P traffic, the 6LRs
+                    might be keen to invalidate efficiently because it may
+                    additionally impact the forwarding efficiency.
+                </t>
+            </section>
             <section title="DCO with multiple preferred parents">
                 <t>
                     <xref target="RFC6550"/> allows a node to select multiple
@@ -1092,7 +1117,7 @@
                 bit is tracked with the following qualities:
             </t>
             <t>
-                <list style="format o ">
+                <list style="symbols">
                     <t>Bit number (counting from bit 0 as the most significant bit)</t>
                     <t>Capability description</t>
                     <t>Defining RFC</t>
@@ -1126,7 +1151,7 @@
                 value is tracked with the following qualities:
             </t>
             <t>
-                <list style="format o ">
+                <list style="symbols">
                     <t>Status Code</t>
                     <t>Description</t>
                     <t>Defining RFC</t>
@@ -1160,7 +1185,7 @@
                 bit is tracked with the following qualities:
             </t>
             <t>
-                <list style="format o ">
+                <list style="symbols">
                     <t>Bit number (counting from bit 0 as the most significant bit)</t>
                     <t>Capability description</t>
                     <t>Defining RFC</t>
