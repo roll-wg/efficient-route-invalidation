@@ -35,7 +35,7 @@
 <?rfc subcompact="yes" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-roll-efficient-npdao-15" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-roll-efficient-npdao-16" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN"
@@ -582,11 +582,12 @@
 
             <t>
                 This document specifies a change in the Transit Information Option to
-                contain the "Invalidate previous route" (I) flag. This I-flag signals
+                contain the "Invalidate previous route" (I) flag. This 'I' flag signals
                 the common ancestor node to generate a DCO on behalf of the
-                target node. The I-flag is carried in the Transit Information
+                target node with a RPL Status of 130 indicating that the address
+                has moved. The 'I' flag is carried in the Transit Information
                 Option which augments the reachability information for a given
-                set of RPL Target(s). Transit Information Option with I-flag
+                set of RPL Target(s). Transit Information Option with 'I' flag
                 set should be carried in the DAO message when route
                 invalidation is sought for the corresponding target(s).
             </t>
@@ -615,8 +616,8 @@
             </t>
             <t>
                 The common ancestor node SHOULD generate a DCO message in
-                response to this I-flag when it sees that the routing
-                adjacencies have changed for the target. The I-flag is
+                response to this 'I' flag when it sees that the routing
+                adjacencies have changed for the target. The 'I' flag is
                 intended to give the target node control over its own route
                 invalidation, serving as a signal to request DCO generation.
             </t>
@@ -638,7 +639,7 @@
 0                   1                   2                   3
 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-| RPLInstanceID |K|D|   Flags   |   Reserved    | DCOSequence   |
+| RPLInstanceID |K|D|   Flags   |  RPL  Status  | DCOSequence   |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
 +                                                               +
@@ -683,8 +684,15 @@
                 the sender and MUST be ignored by the receiver.
             </t>
             <t>
-                Reserved: 8-bit unused field. The field MUST be initialized to
-                zero by the sender and MUST be ignored by the receiver.
+                RPL Status: The RPL Status as defined in section 6.5.1 of <xref
+                target="RFC6550"/>.
+                Indicative of the reason why the DCO happened, the RPL Status
+                MUST NOT be changed as the DCO is propagated down the route
+                being invalidated.
+                This value is informative and does not affect the behavior of
+                the receiver. In particular, unknown values are ignored by the
+                receiver.
+                Only Rejection Codes (value above 128) are expected in a DCO.
             </t>
             <t>
                 DCOSequence: 8-bit field incremented at each unique DCO message
@@ -759,7 +767,7 @@
 0                   1                   2                   3
 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-| RPLInstanceID |D|   Flags     |  DCOSequence  |    Status     |
+| RPLInstanceID |D|   Flags     |  DCOSequence  | DCO-ACK Status|
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
 +                                                               +
@@ -788,8 +796,10 @@
                     copied from the DCOSequence received in the DCO message.
                 </t>
                 <t>
-                    Status: Indicates the completion. Status 0 is defined as
-                    unqualified acceptance in this specification. Status 1 is
+                    DCO-ACK Status: Indicates the completion. A value of 0 is
+                    defined as
+                    unqualified acceptance in this specification. A value of 1
+                    is
                     defined as "No routing-entry for the Target found". The
                     remaining status values are reserved as rejection codes.
                 </t>
@@ -910,7 +920,7 @@
                     nodes will generate their respective DAOs to update their
                     paths, and the previous route invalidation for those nodes
                     should work in the similar manner described for switching
-                    node. The dependent node may set the I-flag in the Transit
+                    node. The dependent node may set the 'I' flag in the Transit
                     Information Option as part of regular DAO so as to
                     request invalidation of previous route from the common
                     ancestor node.
@@ -920,7 +930,7 @@
                     of their parents in turn have decided to switch their
                     parent. Thus for route invalidation the dependent nodes may
                     choose to always set the 'I' flag in all its DAO message's
-                    Transit Information Option. Note that setting the I-flag is
+                    Transit Information Option. Note that setting the 'I' flag is
                     not counterproductive even if there is no previous
                     route to be invalidated.
                 </t>
@@ -1103,7 +1113,7 @@
 
         <t>
             IANA is requested to allocate bit 1 from the Transit Information
-            Option Flags registry for the I-flag (<xref target="transit_opt_changes"/>)
+            Option Flags registry for the 'I' flag (<xref target="transit_opt_changes"/>)
         </t>
         <section title="New Registry for the Destination Cleanup Object (DCO) Flags">
             <t>
@@ -1210,22 +1220,29 @@
             This document introduces the ability for a common ancestor node to
             invalidate a route on behalf of the target node. The common
             ancestor node could be directed to do so by the target node using
-            the I-flag in DCO's Transit Information Option. However, the common
+            the 'I' flag in DCO's Transit Information Option. However, the common
             ancestor node is in a position to unilaterally initiate the route
             invalidation since it possesses all the required state information,
             namely, the Target address and the corresponding Path Sequence.
             Thus a rogue common ancestor node could initiate such an
             invalidation and impact the traffic to the target node.
         </t>
+        <t> The DCO carries a RPL Status value, which is informative. New Status
+            values may be created over time and a node will ignore an unknown
+            Status value. Which makes it so that the RPL Status field may be
+            used as a cover channel. But the channel only works once since the
+            message destroys its own medium, that is the existing route that it
+            is removing.
+        </t>
         <t>
-            This document also introduces an I-flag which is set by the target
+            This document also introduces an 'I' flag which is set by the target
             node and used by the ancestor node to initiate a DCO if the
             ancestor sees an update in the route adjacency. However,
             this flag could be spoofed by a malicious 6LR in the path and can
             cause invalidation of an existing active path. Note that invalidation
             will happen only if the other conditions such as Path Sequence
             condition is also met. Having said that, such a malicious 6LR may
-            spoof a DAO on behalf of the (sub) child with the I-flag set and
+            spoof a DAO on behalf of the (sub) child with the 'I' flag set and
             can cause route invalidation on behalf of the (sub) child node.
             Note that, using existing mechanisms offered by <xref
                 target="RFC6550"/>, a malicious 6LR might also spoof a DAO with
