@@ -692,7 +692,7 @@
                 This value is informative and does not affect the behavior of
                 the receiver. In particular, unknown values are ignored by the
                 receiver.
-                Only Rejection Codes (value above 128) are expected in a DCO.
+                Only Rejection Codes (values above 127) are expected in a DCO.
             </t>
             <t>
                 DCOSequence: 8-bit field incremented at each unique DCO message
@@ -1229,7 +1229,7 @@
         </t>
         <t> The DCO carries a RPL Status value, which is informative. New Status
             values may be created over time and a node will ignore an unknown
-            Status value. Which makes it so that the RPL Status field may be
+            Status value. This enables RPL Status field to be
             used as a cover channel. But the channel only works once since the
             message destroys its own medium, that is the existing route that it
             is removing.
