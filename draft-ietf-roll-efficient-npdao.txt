@@ -515,7 +515,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
    NOT be changed as the DCO is propagated down the route being
    invalidated.  This value is informative and does not affect the
    behavior of the receiver.  In particular, unknown values are ignored
-   by the receiver.  Only Rejection Codes (values above 127) are
+   by the receiver.  Only Rejection Codes (values of 128 and above) are
    expected in a DCO.
 
    DCOSequence: 8-bit field incremented at each unique DCO message from
