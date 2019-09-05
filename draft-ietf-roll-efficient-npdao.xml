@@ -692,7 +692,7 @@
                 This value is informative and does not affect the behavior of
                 the receiver. In particular, unknown values are ignored by the
                 receiver.
-                Only Rejection Codes (values above 127) are expected in a DCO.
+                Only Rejection Codes (values above 128) are expected in a DCO.
             </t>
             <t>
                 DCOSequence: 8-bit field incremented at each unique DCO message
