@@ -5,11 +5,11 @@
 ROLL                                                      R. Jadhav, Ed.
 Internet-Draft                                                    Huawei
 Intended status: Standards Track                              P. Thubert
-Expires: March 7, 2020                                             Cisco
+Expires: March 8, 2020                                             Cisco
                                                                 R. Sahoo
                                                                   Z. Cao
                                                                   Huawei
-                                                       September 4, 2019
+                                                       September 5, 2019
 
 
                       Efficient Route Invalidation
@@ -39,7 +39,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 7, 2020.
+   This Internet-Draft will expire on March 8, 2020.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Jadhav, et al.            Expires March 7, 2020                 [Page 1]
+Jadhav, et al.            Expires March 8, 2020                 [Page 1]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Jadhav, et al.            Expires March 7, 2020                 [Page 2]
+Jadhav, et al.            Expires March 8, 2020                 [Page 2]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -165,7 +165,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                 [Page 3]
+Jadhav, et al.            Expires March 8, 2020                 [Page 3]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -221,7 +221,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                 [Page 4]
+Jadhav, et al.            Expires March 8, 2020                 [Page 4]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -277,7 +277,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                 [Page 5]
+Jadhav, et al.            Expires March 8, 2020                 [Page 5]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -333,7 +333,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                 [Page 6]
+Jadhav, et al.            Expires March 8, 2020                 [Page 6]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -389,7 +389,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                 [Page 7]
+Jadhav, et al.            Expires March 8, 2020                 [Page 7]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -445,7 +445,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                 [Page 8]
+Jadhav, et al.            Expires March 8, 2020                 [Page 8]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -501,7 +501,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                 [Page 9]
+Jadhav, et al.            Expires March 8, 2020                 [Page 9]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -515,8 +515,8 @@ Internet-Draft        Efficient Route Invalidation        September 2019
    NOT be changed as the DCO is propagated down the route being
    invalidated.  This value is informative and does not affect the
    behavior of the receiver.  In particular, unknown values are ignored
-   by the receiver.  Only Rejection Codes (value above 128) are expected
-   in a DCO.
+   by the receiver.  Only Rejection Codes (values above 127) are
+   expected in a DCO.
 
    DCOSequence: 8-bit field incremented at each unique DCO message from
    a node and echoed in the DCO-ACK message.  The initial DCOSequence
@@ -557,7 +557,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                [Page 10]
+Jadhav, et al.            Expires March 8, 2020                [Page 10]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -613,7 +613,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                [Page 11]
+Jadhav, et al.            Expires March 8, 2020                [Page 11]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -669,7 +669,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                [Page 12]
+Jadhav, et al.            Expires March 8, 2020                [Page 12]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -725,7 +725,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                [Page 13]
+Jadhav, et al.            Expires March 8, 2020                [Page 13]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -781,7 +781,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                [Page 14]
+Jadhav, et al.            Expires March 8, 2020                [Page 14]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -837,7 +837,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                [Page 15]
+Jadhav, et al.            Expires March 8, 2020                [Page 15]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -893,7 +893,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                [Page 16]
+Jadhav, et al.            Expires March 8, 2020                [Page 16]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -949,7 +949,7 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                [Page 17]
+Jadhav, et al.            Expires March 8, 2020                [Page 17]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -988,10 +988,9 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
    The DCO carries a RPL Status value, which is informative.  New Status
    values may be created over time and a node will ignore an unknown
-   Status value.  Which makes it so that the RPL Status field may be
-   used as a cover channel.  But the channel only works once since the
-   message destroys its own medium, that is the existing route that it
-   is removing.
+   Status value.  This enables RPL Status field to be used as a cover
+   channel.  But the channel only works once since the message destroys
+   its own medium, that is the existing route that it is removing.
 
    This document also introduces an 'I' flag which is set by the target
    node and used by the ancestor node to initiate a DCO if the ancestor
@@ -1002,15 +1001,15 @@ Internet-Draft        Efficient Route Invalidation        September 2019
    Having said that, such a malicious 6LR may spoof a DAO on behalf of
    the (sub) child with the 'I' flag set and can cause route
    invalidation on behalf of the (sub) child node.  Note that, using
+   existing mechanisms offered by [RFC6550], a malicious 6LR might also
 
 
 
-Jadhav, et al.            Expires March 7, 2020                [Page 18]
+Jadhav, et al.            Expires March 8, 2020                [Page 18]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
 
-   existing mechanisms offered by [RFC6550], a malicious 6LR might also
    spoof a DAO with lifetime of zero or otherwise cause denial of
    service by dropping traffic entirely, so the new mechanism described
    in this document does not present a substantially increased risk of
@@ -1061,7 +1060,8 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                [Page 19]
+
+Jadhav, et al.            Expires March 8, 2020                [Page 19]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -1117,7 +1117,7 @@ A.1.  Example DCO Messaging
 
 
 
-Jadhav, et al.            Expires March 7, 2020                [Page 20]
+Jadhav, et al.            Expires March 8, 2020                [Page 20]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -1173,7 +1173,7 @@ A.2.  Example DCO Messaging with multiple preferred parents
 
 
 
-Jadhav, et al.            Expires March 7, 2020                [Page 21]
+Jadhav, et al.            Expires March 8, 2020                [Page 21]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -1229,7 +1229,7 @@ Authors' Addresses
 
 
 
-Jadhav, et al.            Expires March 7, 2020                [Page 22]
+Jadhav, et al.            Expires March 8, 2020                [Page 22]
 
 Internet-Draft        Efficient Route Invalidation        September 2019
 
@@ -1285,4 +1285,4 @@ Internet-Draft        Efficient Route Invalidation        September 2019
 
 
 
-Jadhav, et al.            Expires March 7, 2020                [Page 23]
+Jadhav, et al.            Expires March 8, 2020                [Page 23]
