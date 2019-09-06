@@ -103,7 +103,7 @@
       </address>
     </author>
 
-    <date year="2019" />
+    <date/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
          in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -114,7 +114,7 @@
 
     <!-- Meta-data Declarations -->
 
-    <area>General</area>
+    <area>Routing</area>
 
     <workgroup>ROLL</workgroup>
 
@@ -692,7 +692,7 @@
                 This value is informative and does not affect the behavior of
                 the receiver. In particular, unknown values are ignored by the
                 receiver.
-                Only Rejection Codes (values above 128) are expected in a DCO.
+                Only Rejection Codes (values of 128 and above) are expected in a DCO.
             </t>
             <t>
                 DCOSequence: 8-bit field incremented at each unique DCO message
