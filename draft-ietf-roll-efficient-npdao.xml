@@ -684,15 +684,12 @@
                 the sender and MUST be ignored by the receiver.
             </t>
             <t>
-                RPL Status: The RPL Status as defined in section 6.5.1 of <xref
-                target="RFC6550"/>.
-                Indicative of the reason why the DCO happened, the RPL Status
-                MUST NOT be changed as the DCO is propagated down the route
-                being invalidated.
-                This value is informative and does not affect the behavior of
-                the receiver. In particular, unknown values are ignored by the
-                receiver. Only Rejection Codes (values of 128 and above) are
-                expected in a DCO.
+                RPL Status: As defined in <xref target="RFC6550"/> and updated
+                in <xref target="I-D.ietf-roll-unaware-leaves"/>. The root or
+                common parent that generates a DCO is authoritative for setting
+                the status information and the information is unchanged as
+                propagated down the DODAG. This document does not specify a
+                differentiated action based on the RPL status.
             </t>
             <t>
                 DCOSequence: 8-bit field incremented at each unique DCO message
@@ -1314,6 +1311,7 @@
         &RFC6550;
         &RFC2119;
         &RFC8174;
+    <?rfc include='reference.I-D.ietf-roll-unaware-leaves.xml'?>
     </references>
 
     <section anchor="app-additional" title="Example Messaging">
