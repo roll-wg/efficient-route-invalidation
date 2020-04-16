@@ -9,6 +9,7 @@
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC8174 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC6550 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6550.xml">
+<!ENTITY RFC8505 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8505.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
@@ -584,12 +585,18 @@
                 This document specifies a change in the Transit Information Option to
                 contain the "Invalidate previous route" (I) flag. This 'I' flag signals
                 the common ancestor node to generate a DCO on behalf of the
-                target node with a RPL Status of 130 indicating that the address
+                target node with a RPL Status of 195 indicating that the address
                 has moved. The 'I' flag is carried in the Transit Information
                 Option which augments the reachability information for a given
                 set of RPL Target(s). Transit Information Option with 'I' flag
                 set should be carried in the DAO message when route
                 invalidation is sought for the corresponding target(s).
+            </t>
+            <t>
+                Value 195 represents 'E' and 'A' bit in RPL Status to be set as
+                per Figure 3 of <xref target="I-D.ietf-roll-unaware-leaves"/>
+                with the lower 6 bits with value 3 indicating 'Moved' as per
+                Table 1 of [RFC8505].
             </t>
             <t> <figure align="center" anchor="transit_info_with_i"
                     title="Updated Transit Information Option (New I flag
