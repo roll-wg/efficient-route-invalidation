@@ -593,10 +593,10 @@
                 invalidation is sought for the corresponding target(s).
             </t>
             <t>
-                Value 195 represents 'E' and 'A' bit in RPL Status to be set as
-                per Figure 3 of <xref target="I-D.ietf-roll-unaware-leaves"/>
-                with the lower 6 bits with value 3 indicating 'Moved' as per
-                Table 1 of [RFC8505].
+                Value 195 represents 'E' and 'A' bit in RPL Status to be set.
+                Figure 3 of <xref target="I-D.ietf-roll-unaware-leaves"/> shows
+                the placement of these bit fields.  The lower 6 bits having
+                value 3 indicates 'Moved' as per Table 1 of [RFC8505].
             </t>
             <t> <figure align="center" anchor="transit_info_with_i"
                     title="Updated Transit Information Option (New I flag
@@ -646,7 +646,7 @@
 0                   1                   2                   3
 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-| RPLInstanceID |K|D|   Flags   |  RPL  Status  | DCOSequence   |
+| RPLInstanceID |K|D|   Flags   |  RPL Status   | DCOSequence   |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
 +                                                               +
@@ -1318,6 +1318,7 @@
         &RFC6550;
         &RFC2119;
         &RFC8174;
+        &RFC8505;
     <?rfc include='reference.I-D.ietf-roll-unaware-leaves.xml'?>
     </references>
 
