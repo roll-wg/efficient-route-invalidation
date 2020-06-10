@@ -160,7 +160,7 @@
             RPL allows the use of No-Path DAO (NPDAO) messaging to invalidate a
             routing path corresponding to the given target, thus releasing
             resources utilized on that path. A NPDAO is a DAO message with
-            route lifetime of zero, originates at the target node and always
+            route lifetime of zero. It originates at the target node and always
             flows upstream towards the 6LBR. This document explains the
             problems associated with the current use of NPDAO messaging and
             also discusses the requirements for an optimized route invalidation
@@ -593,10 +593,10 @@
                 invalidation is sought for the corresponding target(s).
             </t>
             <t>
-                Value 195 represents 'E' and 'A' bit in RPL Status to be set.
+                Value 195 represents the 'E' and 'A' bit in RPL Status both set.
                 Figure 3 of <xref target="I-D.ietf-roll-unaware-leaves"/> shows
-                the placement of these bit fields.  The lower 6 bits having
-                value 3 indicates 'Moved' as per Table 1 of [RFC8505].
+                the placement of these bits. The lower 6 bits, containing
+                the value 3, indicate 'Moved' as per Table 1 of [RFC8505].
             </t>
             <t> <figure align="center" anchor="transit_info_with_i"
                     title="Updated Transit Information Option (New I flag
@@ -679,7 +679,7 @@
                 find the routing entry for the indicated target. When the
                 sender does not set the 'K' flag it is an indication that the
                 sender does not expect a response, and the sender SHOULD NOT
-                retry the DCO.
+                retry the DCO-ACK.
             </t>
             <t>
                 D: The 'D' flag indicates that the DODAGID field is present.
@@ -887,7 +887,7 @@
 
         <section title="Unsolicited DCO">
             <t>
-                A 6LR may generate an unsolicited DCO to unilaterally cleanup
+                A 6LR may generate an unsolicited DCO to unilaterally clean up
                 the path on behalf of the target entry. The 6LR has all the
                 state information, namely, the Target address and the Path
                 Sequence, required for generating DCO in its routing table.
@@ -1036,9 +1036,9 @@
                 </t>
                 <t>
                     With DCO, the Target node itself does not initiate the
-                    route invalidation and it is left to the common ancestor
-                    node. A common ancestor node when it discovers an updated
-                    DAO from a new next-hop, it initiates a DCO. With multiple
+                    route invalidation, this being left to the common ancestor
+                    node. When it discovers an updated
+                    DAO from a new next-hop, the common ancestor node initiates a DCO. With multiple
                     preferred parents, this handling does not change. But in
                     this case it is recommended that an implementation
                     initiates a DCO after a time period (DelayDCO) such that
