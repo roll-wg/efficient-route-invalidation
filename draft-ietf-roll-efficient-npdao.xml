@@ -596,7 +596,7 @@
                 Value 195 represents 'E' and 'A' bit in RPL Status to be set.
                 Figure 3 of <xref target="I-D.ietf-roll-unaware-leaves"/> shows
                 the placement of these bit fields.  The lower 6 bits having
-                value 3 indicates 'Moved' as per Table 1 of [RFC8505].
+				value 3 indicates 'Moved' as per Table 1 of <xref target="RFC8505"/>.
             </t>
             <t> <figure align="center" anchor="transit_info_with_i"
                     title="Updated Transit Information Option (New I flag
@@ -771,7 +771,7 @@
 0                   1                   2                   3
 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-| RPLInstanceID |D|   Flags     |  DCOSequence  | DCO-ACK Status|
+| RPLInstanceID |D|   Flags     |  DCOSequence  |     Status    |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
 +                                                               +
@@ -800,12 +800,11 @@
                     copied from the DCOSequence received in the DCO message.
                 </t>
                 <t>
-                    DCO-ACK Status: Indicates the completion. A value of 0 is
-                    defined as
-                    unqualified acceptance in this specification. A value of 1
-                    is
-                    defined as "No routing-entry for the Target found". The
-                    remaining status values are reserved as rejection codes.
+					Status: Indicates the completion status. Section 12.5 of
+					<xref target="I-D.ietf-roll-unaware-leaves"/> defines the
+					status values.  A value of 0 is defined as unqualified
+					acceptance. A value of 1 is defined as "No routing-entry
+					for the indicated Target found".
                 </t>
                 <t>
                     DODAGID (optional): 128-bit unsigned integer set by a DODAG
@@ -1153,7 +1152,7 @@
                 <c>This document</c>
             </texttable>
         </section>
-        <section title="New Registry for the Destination Cleanup Object Acknowledgment (DCO-ACK) Status field">
+		<!-- <section title="New Registry for the Destination Cleanup Object Acknowledgment (DCO-ACK) Status field">
             <t>
                 IANA is requested to create a registry for the 8-bit Destination Cleanup
                 Object Acknowledgment (DCO-ACK) Status field. This registry
@@ -1185,7 +1184,7 @@
                 <c>No routing-entry for the indicated Target found</c>
                 <c>This document</c>
             </texttable>
-        </section>
+		</section> -->
         <section title="New Registry for the Destination Cleanup Object (DCO)
         Acknowledgment Flags">
             <t>
